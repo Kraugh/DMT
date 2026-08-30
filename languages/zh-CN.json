@@ -1,0 +1,25 @@
+{
+  "_language": {
+    "code": "zh-CN",
+    "name": "简体中文",
+    "englishName": "Simplified Chinese",
+    "fallback": "en-US"
+  },
+  "strings": {
+    "app.name": "DMT — Dashboard Maintenance Toolkit",
+    "app.status.design": "设计中",
+    "nav.dashboard": "仪表板",
+    "nav.assets": "资产",
+    "nav.software": "软件",
+    "nav.settings": "设置",
+    "common.search": "搜索",
+    "common.cancel": "取消",
+    "common.save": "保存",
+    "auth.signIn": "登录",
+    "inventory.importNow": "立即导入新数据",
+    "inventory.lastImport": "上次导入",
+    "inventory.nextImport": "下次导入",
+    "inventory.autoImport": "自动导入",
+    "inventory.interval": "导入间隔"
+  }
+}

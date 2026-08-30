@@ -1,0 +1,32 @@
+# Runtime / local configuration
+.env
+.env.*
+!.env.example
+config.local.*
+
+# Databases and runtime data
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+data/
+incoming/
+processed/
+rejected/
+logs/
+
+# Common tooling
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+build/
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini

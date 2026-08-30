@@ -1,0 +1,25 @@
+{
+  "_language": {
+    "code": "fr-FR",
+    "name": "Français",
+    "englishName": "French",
+    "fallback": "en-US"
+  },
+  "strings": {
+    "app.name": "DMT — Dashboard Maintenance Toolkit",
+    "app.status.design": "En conception",
+    "nav.dashboard": "Tableau de bord",
+    "nav.assets": "Actifs",
+    "nav.software": "Logiciels",
+    "nav.settings": "Paramètres",
+    "common.search": "Rechercher",
+    "common.cancel": "Annuler",
+    "common.save": "Enregistrer",
+    "auth.signIn": "Se connecter",
+    "inventory.importNow": "Importer les nouvelles données maintenant",
+    "inventory.lastImport": "Dernier import",
+    "inventory.nextImport": "Prochain import",
+    "inventory.autoImport": "Import automatique",
+    "inventory.interval": "Intervalle d’importation"
+  }
+}

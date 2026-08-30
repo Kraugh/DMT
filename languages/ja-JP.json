@@ -1,0 +1,25 @@
+{
+  "_language": {
+    "code": "ja-JP",
+    "name": "日本語",
+    "englishName": "Japanese",
+    "fallback": "en-US"
+  },
+  "strings": {
+    "app.name": "DMT — Dashboard Maintenance Toolkit",
+    "app.status.design": "設計中",
+    "nav.dashboard": "ダッシュボード",
+    "nav.assets": "資産",
+    "nav.software": "ソフトウェア",
+    "nav.settings": "設定",
+    "common.search": "検索",
+    "common.cancel": "キャンセル",
+    "common.save": "保存",
+    "auth.signIn": "サインイン",
+    "inventory.importNow": "新しいデータを今すぐインポート",
+    "inventory.lastImport": "前回のインポート",
+    "inventory.nextImport": "次回のインポート",
+    "inventory.autoImport": "自動インポート",
+    "inventory.interval": "インポート間隔"
+  }
+}
