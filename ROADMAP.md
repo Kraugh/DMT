@@ -131,6 +131,46 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 - [ ] PostgreSQL/MySQL migration path if concurrent load or deployment needs exceed SQLite.
 - [ ] Optional PWA capabilities.
 
+## Phase 6 — Optional recommendations and on-premise device monitoring
+
+These are optional future capabilities. They are not requirements for the first DMT release and must not displace core asset, ingestion, security or operational-maturity priorities.
+
+### Procurement provider foundation
+
+- [ ] Define a provider-neutral **Procurement Provider** abstraction, independent from DMT's inventory and recommendation logic.
+- [ ] Allow providers such as Amazon, AliExpress, professional IT distributors, a customer's preferred supplier, a custom corporate catalogue/URL or a future internal procurement system.
+- [ ] Keep core DMT functionality independent from affiliate programmes and commercial-provider availability.
+- [ ] Allow enterprise administrators to disable commercial suggestions completely, select permitted providers or replace public providers with their own supplier.
+- [ ] Require an explicit user action before any commercial search, link or provider request; never show automatic advertising, open external sites automatically or initiate purchases.
+- [ ] Do not perform commercial tracking or provider calls merely because an asset page is viewed.
+- [ ] Limit results to a small number of relevant products or searches rather than exposing large catalogues.
+- [ ] Clearly disclose affiliate/partner links when used, subject to the provider's current terms and applicable privacy requirements.
+- [ ] Reassess affiliate-programme terms, disclosure duties and privacy implications before implementation.
+
+### Hardware upgrade recommendations
+
+- [ ] Add a discreet, collapsed-by-default **Possible upgrades** section to the asset detail page.
+- [ ] Initially evaluate reasonable RAM, SATA SSD and NVMe/M.2 upgrades, including useful capacity increases where applicable.
+- [ ] Keep three responsibilities separate: MT hardware inventory, DMT compatibility/upgrade recommendation and the optional Procurement Provider.
+- [ ] Never infer compatibility from a generic technology label such as `DDR4` or `NVMe` alone.
+- [ ] Recommend an upgrade only when the available technical evidence is sufficient; otherwise state explicitly that compatibility requires verification.
+- [ ] Show no products or commercial searches until the user deliberately opens and invokes the feature.
+
+### Network printer and consumable monitoring
+
+- [ ] For on-premise DMT, evaluate read-only discovery and monitoring of network printers via SNMP.
+- [ ] Support SNMPv2c where required and prefer/support SNMPv3 where available.
+- [ ] Use the standard Printer-MIB as the first source, with an extensible path for vendor-specific OIDs/MIBs when standard data is insufficient.
+- [ ] Never use SNMP to modify printer configuration.
+- [ ] Collect, when exposed by the device, manufacturer, model, serial number, hostname/IP, device/printer status and errors.
+- [ ] Collect consumable type, identifiable product/code, toner or ink level, drum/imaging unit, waste toner and other exposed maintenance/consumable states.
+- [ ] Use configurable, reasonably slow polling rather than continuous interrogation.
+- [ ] Allow configurable thresholds and alerts such as `Black toner 12%`.
+- [ ] When a consumable can be identified, offer an explicit **Find consumable** or **Order new cartridges** action through the shared Procurement Provider abstraction.
+- [ ] Do not hardcode printer procurement to Amazon or any other individual provider.
+- [ ] Do not show automatic advertising, open commercial sites automatically or initiate purchases.
+- [ ] Treat direct private-LAN access as an on-premise capability. Any future DMT cloud equivalent requires a separately designed local agent/relay component and must not be assumed to share the same architecture.
+
 ## Explicit non-goals for the initial project
 
 DMT is not currently intended to provide:
