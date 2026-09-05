@@ -1,0 +1,278 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using DMT.Setup.Models;
+using DMT.Setup.Services;
+
+namespace DMT.Setup;
+
+public partial class MainWindow : Window
+{
+    private readonly LocalizationService _localization = new();
+    private readonly PortInspectionService _portInspector = new();
+    private readonly ListenerDetailService _listenerDetailService = new();
+    private IReadOnlyList<ListeningEndpoint> _listeners = [];
+    private readonly ObservableCollection<EndpointRow> _visibleListeners = new();
+    private bool _networkVisible;
+    private ListenerDetails? _selectedDetails;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+        _localization.Initialize();
+        _localization.PropertyChanged += Localization_PropertyChanged;
+        DataContext = _localization;
+        PortsGrid.ItemsSource = _visibleListeners;
+        UpdateLocalizedNetworkUi();
+        StateChanged += MainWindow_StateChanged;
+        UpdateWindowStateButton();
+    }
+
+    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+        {
+            ToggleMaximizeRestore();
+            return;
+        }
+
+        if (e.ButtonState == MouseButtonState.Pressed) DragMove();
+    }
+
+    private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+    private void MaximizeRestore_Click(object sender, RoutedEventArgs e) => ToggleMaximizeRestore();
+
+    private void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+    private void ToggleMaximizeRestore()
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    }
+
+    private void MainWindow_StateChanged(object? sender, EventArgs e) => UpdateWindowStateButton();
+
+    private void UpdateWindowStateButton()
+    {
+        if (MaximizeRestoreButton is null) return;
+
+        var maximized = WindowState == WindowState.Maximized;
+        MaximizeRestoreButton.Content = maximized ? "\uE923" : "\uE922";
+        MaximizeRestoreButton.ToolTip = maximized
+            ? _localization["setup.window.restore"]
+            : _localization["setup.window.maximize"];
+    }
+
+    private void Badge_Click(object sender, RoutedEventArgs e) => _localization.UnlockLanguage("tlh", select: true);
+
+    private void Begin_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_networkVisible)
+        {
+            ShowNetworkPanel();
+            return;
+        }
+
+        NextStepOverlay.Visibility = Visibility.Visible;
+    }
+
+    private void WelcomeNav_Click(object sender, RoutedEventArgs e) => ShowWelcomePanel();
+    private void NetworkNav_Click(object sender, RoutedEventArgs e) => ShowNetworkPanel();
+
+    private void ShowNetworkPanel()
+    {
+        _networkVisible = true;
+        WelcomePanel.Visibility = Visibility.Collapsed;
+        NetworkPanel.Visibility = Visibility.Visible;
+        WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
+        NetworkNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        BackButton.Visibility = Visibility.Visible;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
+        RefreshPorts();
+    }
+
+    private void ShowWelcomePanel()
+    {
+        _networkVisible = false;
+        NetworkPanel.Visibility = Visibility.Collapsed;
+        WelcomePanel.Visibility = Visibility.Visible;
+        NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
+        WelcomeNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        BackButton.Visibility = Visibility.Collapsed;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.welcome.begin]"));
+    }
+
+    private void Back_Click(object sender, RoutedEventArgs e) => ShowWelcomePanel();
+
+    private void RefreshPorts_Click(object sender, RoutedEventArgs e) => RefreshPorts();
+
+    private void RefreshPorts()
+    {
+        try
+        {
+            _listeners = _portInspector.Inspect();
+            SuggestedPortText.Text = PortInspectionService.SuggestPort(_listeners).ToString();
+            ApplyFilter();
+        }
+        catch (Exception ex)
+        {
+            _listeners = [];
+            SuggestedPortText.Text = "—";
+            ListenerStatusText.Text = ex.Message;
+            ApplyFilter();
+        }
+    }
+
+    private void PortFilter_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (IsLoaded) ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        var selected = (PortsGrid?.SelectedItem as EndpointRow)?.Source;
+        var q = PortFilterBox?.Text?.Trim() ?? "";
+        var filtered = string.IsNullOrWhiteSpace(q)
+            ? _listeners
+            : _listeners.Where(x =>
+                x.Port.ToString().Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                x.ProcessId.ToString().Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                x.Address.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                x.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                x.Services.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        _visibleListeners.Clear();
+        foreach (var x in filtered)
+            _visibleListeners.Add(new EndpointRow(x, ExposureLabel(x.Exposure)));
+
+        if (selected is not null)
+        {
+            var restored = _visibleListeners.FirstOrDefault(x => SameEndpoint(x.Source, selected));
+            if (restored is not null && PortsGrid is not null) PortsGrid.SelectedItem = restored;
+            else ClearListenerDetails();
+        }
+
+        var local = _listeners.Count(x => x.IsLoopback);
+        var all = _listeners.Count(x => x.IsAny);
+        var specific = _listeners.Count - local - all;
+        ListenerStatusText.Text = string.Format(_localization["setup.network.status"], _listeners.Count, local, all, specific);
+    }
+
+    private static bool SameEndpoint(ListeningEndpoint a, ListeningEndpoint b) =>
+        a.Port == b.Port && a.ProcessId == b.ProcessId && a.Address.Equals(b.Address, StringComparison.OrdinalIgnoreCase);
+
+    private string ExposureLabel(string exposure) => exposure switch
+    {
+        "local" => _localization["setup.network.local"],
+        "all" => _localization["setup.network.all"],
+        _ => _localization["setup.network.specific"]
+    };
+
+    private void PortsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (PortsGrid.SelectedItem is not EndpointRow row)
+        {
+            ClearListenerDetails();
+            return;
+        }
+
+        _selectedDetails = _listenerDetailService.Inspect(row.Source);
+        RenderListenerDetails();
+    }
+
+    private void ClearListenerDetails()
+    {
+        _selectedDetails = null;
+        if (ListenerDetailsCard is not null) ListenerDetailsCard.Visibility = Visibility.Collapsed;
+    }
+
+    private void RenderListenerDetails()
+    {
+        if (_selectedDetails is null || ListenerDetailsCard is null) return;
+
+        var d = _selectedDetails;
+        var ep = d.Endpoint;
+        ListenerDetailsCard.Visibility = Visibility.Visible;
+        DetailEndpointText.Text = $"{ep.Protocol} {ep.Address}:{ep.Port}";
+        DetailExposureText.Text = ExposureLabel(ep.Exposure);
+        DetailProcessText.Text = string.IsNullOrWhiteSpace(ep.ProcessName)
+            ? $"PID {ep.ProcessId}"
+            : $"{ep.ProcessName}  ·  PID {ep.ProcessId}";
+        DetailServiceText.Text = ValueOrUnavailable(ep.Services);
+        DetailPathText.Text = ValueOrUnavailable(ep.ProcessPath);
+
+        var descriptionParts = new[] { d.FileDescription, d.ProductName }
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+        DetailDescriptionText.Text = ValueOrUnavailable(string.Join(" · ", descriptionParts));
+
+        var companyParts = new[] { d.CompanyName, d.Publisher }
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+        DetailCompanyText.Text = ValueOrUnavailable(string.Join(" · ", companyParts));
+        DetailSignatureText.Text = d.IsSigned switch
+        {
+            true => string.IsNullOrWhiteSpace(d.Publisher)
+                ? _localization["setup.network.signature.signed"]
+                : string.Format(_localization["setup.network.signature.signedBy"], d.Publisher),
+            false => _localization["setup.network.signature.unsigned"],
+            _ => _localization["setup.network.unavailable"]
+        };
+
+        KnowledgeTitleText.Text = _localization[d.KnowledgeTitleKey];
+        KnowledgeBodyText.Text = _localization[d.KnowledgeBodyKey];
+    }
+
+    private string ValueOrUnavailable(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? _localization["setup.network.unavailable"] : value;
+
+    private void Localization_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is "Item[]" or nameof(LocalizationService.SelectedLanguage))
+        {
+            UpdateLocalizedNetworkUi();
+            UpdateWindowStateButton();
+            if (_networkVisible) ApplyFilter();
+            if (_selectedDetails is not null) RenderListenerDetails();
+        }
+    }
+
+    private void UpdateLocalizedNetworkUi()
+    {
+        if (PortColumn is null) return;
+        PortColumn.Header = _localization["setup.network.port"];
+        BindingColumn.Header = _localization["setup.network.binding"];
+        PidColumn.Header = _localization["setup.network.pid"];
+        ProcessColumn.Header = _localization["setup.network.process"];
+        ServiceColumn.Header = _localization["setup.network.service"];
+        ExposureColumn.Header = _localization["setup.network.exposure"];
+    }
+
+    private void PrototypeClose_Click(object sender, RoutedEventArgs e) => NextStepOverlay.Visibility = Visibility.Collapsed;
+
+    private sealed class EndpointRow
+    {
+        public EndpointRow(ListeningEndpoint x, string exposureDisplay)
+        {
+            Source = x;
+            Port = x.Port;
+            Address = x.Address;
+            ProcessId = x.ProcessId;
+            ProcessName = x.ProcessName;
+            Services = x.Services;
+            ProcessPath = x.ProcessPath;
+            ExposureDisplay = exposureDisplay;
+        }
+
+        public ListeningEndpoint Source { get; }
+        public int Port { get; }
+        public string Address { get; }
+        public int ProcessId { get; }
+        public string ProcessName { get; }
+        public string Services { get; }
+        public string ProcessPath { get; }
+        public string ExposureDisplay { get; }
+    }
+}

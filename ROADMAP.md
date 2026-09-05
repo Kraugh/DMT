@@ -13,8 +13,8 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 - [x] Define asset identity as independent from hostname, OS installation and user.
 - [x] Define JSON snapshot ingestion contract with MT.
 - [x] Define configurable polling plus manual immediate import.
-- [ ] Select implementation stack for the first working demo.
-- [ ] Create initial application skeleton and development environment.
+- [x] Select initial Windows setup stack: .NET 10 WPF; Caddy + SQLite deployment baseline.
+- [x] Create initial WPF setup skeleton and runtime JSON localisation loader.
 
 ## Phase 1 — Working demo / MVP
 
@@ -24,7 +24,7 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 - [ ] Admin and read-only user roles.
 - [ ] Language selector available from login onward.
 - [ ] Persist user language preference.
-- [ ] Dark technical dashboard matching the DMT visual identity.
+- [ ] Refined pastel/tactile dashboard matching the DMT visual identity.
 - [ ] Desktop and smartphone layouts.
 
 ### Internationalisation
@@ -32,7 +32,8 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 - [ ] Runtime discovery of JSON files in `languages/`.
 - [ ] No localisable UI string hardcoded in application source.
 - [ ] `en-US` canonical fallback.
-- [ ] Initial `it-IT`, `en-US`, `de-DE`, `fr-FR`, `ja-JP`, `zh-CN` packs.
+- [x] Initial `it-IT`, `en-US`, `de-DE`, `fr-FR`, `es-ES`, `ja-JP`, `zh-CN`, `sv-SE` packs.
+- [x] Hidden key-complete `tlh` pack architecture for the Klingon easter egg.
 - [ ] Missing-key fallback to English.
 - [ ] Missing-key logging and visible development marker.
 - [ ] Locale-aware dates, times, numbers and pluralisation.
@@ -183,3 +184,9 @@ DMT is not currently intended to provide:
 - full RMM functionality.
 
 These would materially alter the project's security model and scope and must not be introduced casually.
+
+### 0.1-dev3
+- [x] Clickable setup navigation for implemented steps
+- [x] Listener selection and detected-facts detail card
+- [x] Executable metadata and embedded signing publisher when available
+- [x] First local listener knowledge base with explicit unknown state

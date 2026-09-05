@@ -30,3 +30,12 @@ coverage/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# .NET / Visual Studio build artifacts
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates

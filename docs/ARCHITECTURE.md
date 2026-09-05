@@ -70,3 +70,16 @@ Technical source data from MT is preserved as observed; DMT translates its own i
 ## Initial persistence
 
 SQLite is the planned first database because the initial workload is read-heavy and small. The data-access layer and migrations must avoid assumptions that prevent later migration to PostgreSQL/MySQL.
+
+
+## DMT Free / Home deployment baseline
+
+The first executable target is Windows with Caddy terminating HTTPS and SQLite as local persistence. DMT backend traffic remains on localhost; the user-facing Caddy port is selected during setup. The setup inspects local listeners before proposing a default port, initially preferring 8443. Caddy Internal CA is the default Home/Free certificate model.
+
+## Visual and setup baseline
+
+The setup is a WPF graphical application and uses the same refined pastel/tactile language as DMT. It explains actions before changing the machine and delays UAC until privileged operations are actually required. The Librarian mascot is good-natured and technically competent; visual references remain original rather than reproducing protected designs.
+
+## Language baseline
+
+Normal runtime-discovered packs are en-US, it-IT, fr-FR, de-DE, es-ES, zh-CN, ja-JP and sv-SE. `tlh.json` is a hidden but otherwise normal pack unlocked as an easter egg. Language packs are validated against en-US key parity.
