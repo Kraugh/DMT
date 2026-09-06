@@ -59,7 +59,6 @@ public partial class MainWindow : Window
         if (MaximizeRestoreButton is null) return;
 
         var maximized = WindowState == WindowState.Maximized;
-        MaximizeRestoreButton.Content = maximized ? "\uE923" : "\uE922";
         MaximizeRestoreButton.ToolTip = maximized
             ? _localization["setup.window.restore"]
             : _localization["setup.window.maximize"];
@@ -276,3 +275,4 @@ public partial class MainWindow : Window
         public string ExposureDisplay { get; }
     }
 }
+

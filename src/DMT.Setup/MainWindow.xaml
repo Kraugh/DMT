@@ -20,9 +20,57 @@
                     <TextBlock Text="{Binding [setup.window.title]}" FontSize="18" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Style="{StaticResource WindowButton}" Content="&#xE921;" Click="Minimize_Click" ToolTip="{Binding [setup.window.minimize]}" />
-                    <Button x:Name="MaximizeRestoreButton" Style="{StaticResource WindowButton}" Content="&#xE922;" Click="MaximizeRestore_Click" />
-                    <Button Style="{StaticResource WindowButton}" Content="&#xE8BB;" Click="Close_Click" ToolTip="{Binding [setup.window.close]}" />
+                    <Button Style="{StaticResource WindowButton}" Click="Minimize_Click" ToolTip="{Binding [setup.window.minimize]}">
+                        <Grid Width="14" Height="14">
+                            <Path Data="M 1.5,8 L 12.5,8"
+                                  Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                  StrokeThickness="1.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" />
+                        </Grid>
+                    </Button>
+
+                    <Button x:Name="MaximizeRestoreButton" Click="MaximizeRestore_Click" Content="WindowStateIcon">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource WindowButton}">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <Grid Width="14" Height="14">
+                                                <Border Width="11" Height="11" BorderThickness="1.25"
+                                                        BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=WindowState}" Value="Maximized">
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <Grid Width="14" Height="14">
+                                                        <Border Width="9" Height="9" BorderThickness="1.15"
+                                                                BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                                HorizontalAlignment="Right" VerticalAlignment="Top" />
+                                                        <Border Width="9" Height="9" BorderThickness="1.15" Background="#F5F8FC"
+                                                                BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                                HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Style="{StaticResource WindowCloseButton}" Click="Close_Click" ToolTip="{Binding [setup.window.close]}">
+                        <Grid Width="14" Height="14">
+                            <Path Data="M 2,2 L 12,12 M 12,2 L 2,12"
+                                  Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                  StrokeThickness="1.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" />
+                        </Grid>
+                    </Button>
                 </StackPanel>
             </Grid>
 
