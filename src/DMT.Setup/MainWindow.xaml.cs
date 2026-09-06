@@ -1,10 +1,13 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DMT.Setup.Models;
 using DMT.Setup.Services;
+using Microsoft.Win32;
 
 namespace DMT.Setup;
 
@@ -13,9 +16,12 @@ public partial class MainWindow : Window
     private readonly LocalizationService _localization = new();
     private readonly PortInspectionService _portInspector = new();
     private readonly ListenerDetailService _listenerDetailService = new();
+    private readonly NetworkInterfaceService _networkInterfaceService = new();
     private IReadOnlyList<ListeningEndpoint> _listeners = [];
+    private IReadOnlyList<NetworkInterfaceInfo> _networkInterfaces = [];
     private readonly ObservableCollection<EndpointRow> _visibleListeners = new();
     private bool _networkVisible;
+    private bool _accessVisible;
     private ListenerDetails? _selectedDetails;
     private bool _portSelectionInitialized;
 
@@ -69,6 +75,13 @@ public partial class MainWindow : Window
 
     private void Begin_Click(object sender, RoutedEventArgs e)
     {
+        if (_accessVisible)
+        {
+            if (!ValidateAccessSelection()) return;
+            NextStepOverlay.Visibility = Visibility.Visible;
+            return;
+        }
+
         if (!_networkVisible)
         {
             ShowNetworkPanel();
@@ -76,18 +89,22 @@ public partial class MainWindow : Window
         }
 
         if (!ValidateSelectedPort()) return;
-        NextStepOverlay.Visibility = Visibility.Visible;
+        ShowAccessPanel();
     }
 
     private void WelcomeNav_Click(object sender, RoutedEventArgs e) => ShowWelcomePanel();
     private void NetworkNav_Click(object sender, RoutedEventArgs e) => ShowNetworkPanel();
+    private void AccessNav_Click(object sender, RoutedEventArgs e) { if (AccessNav.IsEnabled) ShowAccessPanel(); }
 
     private void ShowNetworkPanel()
     {
         _networkVisible = true;
+        _accessVisible = false;
         WelcomePanel.Visibility = Visibility.Collapsed;
+        AccessPanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Visible;
         WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
+        AccessNav.Background = System.Windows.Media.Brushes.Transparent;
         NetworkNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
@@ -97,17 +114,163 @@ public partial class MainWindow : Window
     private void ShowWelcomePanel()
     {
         _networkVisible = false;
+        _accessVisible = false;
         NetworkPanel.Visibility = Visibility.Collapsed;
+        AccessPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Visible;
         NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
+        AccessNav.Background = System.Windows.Media.Brushes.Transparent;
         WelcomeNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Collapsed;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.welcome.begin]"));
     }
 
-    private void Back_Click(object sender, RoutedEventArgs e) => ShowWelcomePanel();
+    private void Back_Click(object sender, RoutedEventArgs e)
+    {
+        if (_accessVisible)
+        {
+            ShowNetworkPanel();
+            return;
+        }
+
+        ShowWelcomePanel();
+    }
+
+    private void ShowAccessPanel()
+    {
+        _networkVisible = false;
+        _accessVisible = true;
+        WelcomePanel.Visibility = Visibility.Collapsed;
+        NetworkPanel.Visibility = Visibility.Collapsed;
+        AccessPanel.Visibility = Visibility.Visible;
+        AccessNav.IsEnabled = true;
+        WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
+        NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
+        AccessNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        BackButton.Visibility = Visibility.Visible;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
+        LoadNetworkInterfaces();
+        ValidateAccessSelection();
+    }
+
+    private void LoadNetworkInterfaces()
+    {
+        try
+        {
+            _networkInterfaces = _networkInterfaceService.Inspect();
+        }
+        catch
+        {
+            _networkInterfaces = [];
+        }
+
+        AccessInterfaceBox.ItemsSource = _networkInterfaces;
+        if (AccessInterfaceBox.SelectedIndex < 0 && _networkInterfaces.Count > 0)
+            AccessInterfaceBox.SelectedIndex = 0;
+
+        UpdateAccessInterfaceState();
+    }
+
+    private void AccessMode_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded) return;
+        UpdateAccessInterfaceState();
+        ValidateAccessSelection();
+    }
+
+    private void AccessInterface_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (IsLoaded) ValidateAccessSelection();
+    }
+
+    private void UpdateAccessInterfaceState()
+    {
+        if (AccessInterfaceBox is null || AccessInterfaceEmptyText is null || AccessCustomRadio is null) return;
+
+        var custom = AccessCustomRadio.IsChecked == true;
+        AccessInterfaceBox.IsEnabled = custom && _networkInterfaces.Count > 0;
+        AccessInterfaceEmptyText.Visibility = custom && _networkInterfaces.Count == 0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
+
+    private bool ValidateAccessSelection()
+    {
+        if (BeginButton is null) return false;
+
+        var valid = AccessLocalRadio?.IsChecked == true
+            || AccessLanRadio?.IsChecked == true
+            || (AccessCustomRadio?.IsChecked == true && AccessInterfaceBox?.SelectedItem is NetworkInterfaceInfo);
+
+        BeginButton.IsEnabled = valid;
+        return valid;
+    }
 
     private void RefreshPorts_Click(object sender, RoutedEventArgs e) => RefreshPorts();
+
+    private void ExportPorts_Click(object sender, RoutedEventArgs e)
+    {
+        if (_listeners.Count == 0)
+            RefreshPorts();
+
+        var dialog = new SaveFileDialog
+        {
+            Title = _localization["setup.network.export"],
+            Filter = _localization["setup.network.exportFilter"],
+            DefaultExt = ".csv",
+            AddExtension = true,
+            FileName = $"DMT-Port-Report-{Environment.MachineName}-{DateTime.Now:yyyyMMdd-HHmmss}.csv"
+        };
+
+        if (dialog.ShowDialog(this) != true) return;
+
+        try
+        {
+            var generated = DateTimeOffset.Now;
+            var sb = new StringBuilder();
+            sb.AppendLine("Computer,Generated,Protocol,Address,Port,Exposure,PID,Process,Service,Executable,Description,Product,Company,Publisher,Signed");
+
+            foreach (var endpoint in _listeners.OrderBy(x => x.Port).ThenBy(x => x.Address, StringComparer.OrdinalIgnoreCase))
+            {
+                var details = _listenerDetailService.Inspect(endpoint);
+                var values = new[]
+                {
+                    Environment.MachineName,
+                    generated.ToString("yyyy-MM-dd HH:mm:ss zzz"),
+                    endpoint.Protocol,
+                    endpoint.Address,
+                    endpoint.Port.ToString(),
+                    ExposureLabel(endpoint.Exposure),
+                    endpoint.ProcessId.ToString(),
+                    endpoint.ProcessName,
+                    endpoint.Services,
+                    endpoint.ProcessPath,
+                    details.FileDescription,
+                    details.ProductName,
+                    details.CompanyName,
+                    details.Publisher,
+                    details.IsSigned?.ToString() ?? ""
+                };
+                sb.AppendLine(string.Join(",", values.Select(CsvField)));
+            }
+
+            File.WriteAllText(dialog.FileName, sb.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this,
+                string.Format(_localization["setup.network.exportError"], ex.Message),
+                _localization["setup.network.exportErrorTitle"],
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+    }
+
+    private static string CsvField(string? value)
+    {
+        value ??= "";
+        return $"\"{value.Replace("\"", "\"\"")}\"";
+    }
 
     private void RefreshPorts()
     {
@@ -285,6 +448,11 @@ public partial class MainWindow : Window
                 ApplyFilter();
                 ValidateSelectedPort();
             }
+            if (_accessVisible)
+            {
+                UpdateAccessInterfaceState();
+                ValidateAccessSelection();
+            }
             if (_selectedDetails is not null) RenderListenerDetails();
         }
     }
@@ -326,4 +494,3 @@ public partial class MainWindow : Window
         public string ExposureDisplay { get; }
     }
 }
-
