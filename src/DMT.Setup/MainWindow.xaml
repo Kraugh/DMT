@@ -1,4 +1,4 @@
-<Window x:Class="DMT.Setup.MainWindow"
+﻿<Window x:Class="DMT.Setup.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding [setup.window.title]}"
@@ -280,13 +280,13 @@
                     <Grid Grid.Row="2" Margin="0,22,0,0">
                         <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button x:Name="BackButton" Style="{StaticResource NavButton}" Content="{Binding [setup.network.back]}" Click="Back_Click" Visibility="Collapsed" Margin="0,0,12,0"/>
-                            <TextBlock Text="DMT Setup 0.1.0-dev   |   © 2026 Kraugh" Foreground="{StaticResource InkSoftBrush}" VerticalAlignment="Center" FontSize="12" />
+                            <Button x:Name="BackButton" Style="{StaticResource SecondaryButton}" Content="{Binding [setup.network.back]}" Click="Back_Click" Visibility="Collapsed" Margin="0,0,12,0"/>
+                            <TextBlock Text="DMT Setup 0.1.0-dev   |   Â© 2026 Kraugh" Foreground="{StaticResource InkSoftBrush}" VerticalAlignment="Center" FontSize="12" />
                         </StackPanel>
                         <Button x:Name="BeginButton" Grid.Column="1" Style="{StaticResource PrimaryButton}" Click="Begin_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Name="BeginButtonText" Text="{Binding [setup.welcome.begin]}" Foreground="White" FontSize="17" FontWeight="SemiBold" />
-                                <TextBlock Text="  ›" Foreground="White" FontSize="24" Margin="10,-4,0,-4" />
+                                <Path Data="M 0,0 L 5,5 L 0,10" Stroke="White" StrokeThickness="2.2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Width="6" Height="10" Stretch="Uniform" Margin="12,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -309,3 +309,5 @@
         </Grid>
     </Border>
 </Window>
+
+
