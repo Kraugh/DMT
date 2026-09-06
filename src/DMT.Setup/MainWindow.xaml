@@ -180,11 +180,19 @@
                         <Grid Grid.Row="1" Margin="0,18,0,14">
                             <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition Width="250"/></Grid.ColumnDefinitions>
                             <Border Background="{StaticResource PowderBrush}" CornerRadius="14" Padding="16" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding [setup.network.suggested]}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="SuggestedPortText" FontSize="22" FontWeight="Bold" Margin="16,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding [setup.network.available]}" Foreground="#48765A" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                </StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding [setup.network.selectedPort]}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="SelectedPortBox" Grid.Column="1" Height="38" Margin="16,0,10,0" Padding="9,5"
+                                             FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"
+                                             TextChanged="SelectedPort_TextChanged" ToolTip="{Binding [setup.network.portHint]}"/>
+                                    <TextBlock x:Name="SelectedPortStatusText" Grid.Column="2" VerticalAlignment="Center"
+                                               FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                </Grid>
                             </Border>
                             <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Click="RefreshPorts_Click" Padding="18,10">
                                 <TextBlock Text="{Binding [setup.network.refresh]}" Foreground="White" FontWeight="SemiBold"/>

@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<EndpointRow> _visibleListeners = new();
     private bool _networkVisible;
     private ListenerDetails? _selectedDetails;
+    private bool _portSelectionInitialized;
 
     public MainWindow()
     {
@@ -74,6 +75,7 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (!ValidateSelectedPort()) return;
         NextStepOverlay.Visibility = Visibility.Visible;
     }
 
@@ -112,16 +114,61 @@ public partial class MainWindow : Window
         try
         {
             _listeners = _portInspector.Inspect();
-            SuggestedPortText.Text = PortInspectionService.SuggestPort(_listeners).ToString();
+
+            if (!_portSelectionInitialized)
+            {
+                var suggestedPort = PortInspectionService.SuggestPort(_listeners);
+                SelectedPortBox.Text = suggestedPort > 0 ? suggestedPort.ToString() : "";
+                _portSelectionInitialized = true;
+            }
+
             ApplyFilter();
+            ValidateSelectedPort();
         }
         catch (Exception ex)
         {
             _listeners = [];
-            SuggestedPortText.Text = "—";
             ListenerStatusText.Text = ex.Message;
             ApplyFilter();
+            ValidateSelectedPort();
         }
+    }
+
+    private void SelectedPort_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (IsLoaded) ValidateSelectedPort();
+    }
+
+    private bool ValidateSelectedPort()
+    {
+        if (SelectedPortBox is null || SelectedPortStatusText is null || BeginButton is null)
+            return false;
+
+        var raw = SelectedPortBox.Text.Trim();
+
+        if (!int.TryParse(raw, out var port) || port is < 1 or > 65535)
+        {
+            SelectedPortStatusText.Text = _localization["setup.network.portInvalid"];
+            SelectedPortStatusText.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(166, 61, 47));
+            BeginButton.IsEnabled = false;
+            return false;
+        }
+
+        if (_listeners.Any(x => x.Port == port))
+        {
+            SelectedPortStatusText.Text = _localization["setup.network.portInUse"];
+            SelectedPortStatusText.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(166, 61, 47));
+            BeginButton.IsEnabled = false;
+            return false;
+        }
+
+        SelectedPortStatusText.Text = _localization["setup.network.portAvailable"];
+        SelectedPortStatusText.Foreground = new System.Windows.Media.SolidColorBrush(
+            System.Windows.Media.Color.FromRgb(72, 118, 90));
+        BeginButton.IsEnabled = true;
+        return true;
     }
 
     private void PortFilter_TextChanged(object sender, TextChangedEventArgs e)
@@ -233,7 +280,11 @@ public partial class MainWindow : Window
         {
             UpdateLocalizedNetworkUi();
             UpdateWindowStateButton();
-            if (_networkVisible) ApplyFilter();
+            if (_networkVisible)
+            {
+                ApplyFilter();
+                ValidateSelectedPort();
+            }
             if (_selectedDetails is not null) RenderListenerDetails();
         }
     }
