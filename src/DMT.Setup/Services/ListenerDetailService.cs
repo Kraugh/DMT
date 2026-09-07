@@ -10,17 +10,18 @@ public sealed class ListenerDetailService
 {
     public ListenerDetails Inspect(ListeningEndpoint endpoint)
     {
+        var executablePath = ResolveExecutablePath(endpoint);
         var description = "";
         var product = "";
         var company = "";
         var publisher = "";
         bool? signed = null;
 
-        if (!string.IsNullOrWhiteSpace(endpoint.ProcessPath) && File.Exists(endpoint.ProcessPath))
+        if (!string.IsNullOrWhiteSpace(executablePath) && File.Exists(executablePath))
         {
             try
             {
-                var info = FileVersionInfo.GetVersionInfo(endpoint.ProcessPath);
+                var info = FileVersionInfo.GetVersionInfo(executablePath);
                 description = info.FileDescription ?? "";
                 product = info.ProductName ?? "";
                 company = info.CompanyName ?? "";
@@ -30,7 +31,7 @@ public sealed class ListenerDetailService
             try
             {
 #pragma warning disable SYSLIB0057 // Authenticode extraction from signed PE files has no direct X509CertificateLoader equivalent.
-                using var cert = new X509Certificate2(X509Certificate.CreateFromSignedFile(endpoint.ProcessPath));
+                using var cert = new X509Certificate2(X509Certificate.CreateFromSignedFile(executablePath));
 #pragma warning restore SYSLIB0057
                 publisher = cert.GetNameInfo(X509NameType.SimpleName, false);
                 if (string.IsNullOrWhiteSpace(publisher)) publisher = cert.Subject;
@@ -50,6 +51,7 @@ public sealed class ListenerDetailService
         return new ListenerDetails
         {
             Endpoint = endpoint,
+            ExecutablePath = executablePath,
             FileDescription = description,
             ProductName = product,
             CompanyName = company,
@@ -58,6 +60,29 @@ public sealed class ListenerDetailService
             KnowledgeTitleKey = titleKey,
             KnowledgeBodyKey = bodyKey
         };
+    }
+
+    private static string ResolveExecutablePath(ListeningEndpoint endpoint)
+    {
+        if (!string.IsNullOrWhiteSpace(endpoint.ProcessPath) && File.Exists(endpoint.ProcessPath))
+            return endpoint.ProcessPath;
+
+        // Some protected Windows processes do not expose MainModule to an unelevated setup.
+        // For well-known system executables, use the canonical System32 image only when it exists.
+        var fileName = endpoint.ProcessName.ToLowerInvariant() switch
+        {
+            "svchost" => "svchost.exe",
+            "lsass" => "lsass.exe",
+            "spoolsv" => "spoolsv.exe",
+            "services" => "services.exe",
+            "wininit" => "wininit.exe",
+            "winlogon" => "winlogon.exe",
+            _ => ""
+        };
+
+        if (string.IsNullOrWhiteSpace(fileName)) return "";
+        var candidate = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), fileName);
+        return File.Exists(candidate) ? candidate : "";
     }
 
     private static (string TitleKey, string BodyKey) ResolveKnowledge(ListeningEndpoint endpoint)

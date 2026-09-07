@@ -228,15 +228,19 @@ public partial class MainWindow : Window
         {
             var generated = DateTimeOffset.Now;
             var sb = new StringBuilder();
-            sb.AppendLine("Computer,Generated,Protocol,Address,Port,Exposure,PID,Process,Service,Executable,Description,Product,Company,Publisher,Signed");
+
+            // Report metadata is written once, separately from the detected listener table.
+            sb.AppendLine(string.Join(",", new[] { "DMT Port Report", "" }.Select(CsvField)));
+            sb.AppendLine(string.Join(",", new[] { "Computer", Environment.MachineName }.Select(CsvField)));
+            sb.AppendLine(string.Join(",", new[] { "Generated", generated.ToString("yyyy-MM-dd HH:mm:ss zzz") }.Select(CsvField)));
+            sb.AppendLine();
+            sb.AppendLine("Protocol,Address,Port,Exposure,PID,Process,Service,Executable,Description,Product,Company,Publisher,Signed,DMTKnowledge,DMTInfo");
 
             foreach (var endpoint in _listeners.OrderBy(x => x.Port).ThenBy(x => x.Address, StringComparer.OrdinalIgnoreCase))
             {
                 var details = _listenerDetailService.Inspect(endpoint);
                 var values = new[]
                 {
-                    Environment.MachineName,
-                    generated.ToString("yyyy-MM-dd HH:mm:ss zzz"),
                     endpoint.Protocol,
                     endpoint.Address,
                     endpoint.Port.ToString(),
@@ -244,12 +248,14 @@ public partial class MainWindow : Window
                     endpoint.ProcessId.ToString(),
                     endpoint.ProcessName,
                     endpoint.Services,
-                    endpoint.ProcessPath,
+                    details.ExecutablePath,
                     details.FileDescription,
                     details.ProductName,
                     details.CompanyName,
                     details.Publisher,
-                    details.IsSigned?.ToString() ?? ""
+                    details.IsSigned?.ToString() ?? "",
+                    _localization[details.KnowledgeTitleKey],
+                    _localization[details.KnowledgeBodyKey]
                 };
                 sb.AppendLine(string.Join(",", values.Select(CsvField)));
             }
@@ -410,7 +416,7 @@ public partial class MainWindow : Window
             ? $"PID {ep.ProcessId}"
             : $"{ep.ProcessName}  ·  PID {ep.ProcessId}";
         DetailServiceText.Text = ValueOrUnavailable(ep.Services);
-        DetailPathText.Text = ValueOrUnavailable(ep.ProcessPath);
+        DetailPathText.Text = ValueOrUnavailable(d.ExecutablePath);
 
         var descriptionParts = new[] { d.FileDescription, d.ProductName }
             .Where(x => !string.IsNullOrWhiteSpace(x))

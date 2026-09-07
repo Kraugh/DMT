@@ -3,6 +3,7 @@ namespace DMT.Setup.Models;
 public sealed class ListenerDetails
 {
     public ListeningEndpoint Endpoint { get; init; } = new();
+    public string ExecutablePath { get; init; } = "";
     public string FileDescription { get; init; } = "";
     public string ProductName { get; init; } = "";
     public string CompanyName { get; init; } = "";
