@@ -22,6 +22,7 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<EndpointRow> _visibleListeners = new();
     private bool _networkVisible;
     private bool _accessVisible;
+    private bool _httpsVisible;
     private ListenerDetails? _selectedDetails;
     private bool _portSelectionInitialized;
 
@@ -75,10 +76,16 @@ public partial class MainWindow : Window
 
     private void Begin_Click(object sender, RoutedEventArgs e)
     {
+        if (_httpsVisible)
+        {
+            NextStepOverlay.Visibility = Visibility.Visible;
+            return;
+        }
+
         if (_accessVisible)
         {
             if (!ValidateAccessSelection()) return;
-            NextStepOverlay.Visibility = Visibility.Visible;
+            ShowHttpsPanel();
             return;
         }
 
@@ -95,16 +102,20 @@ public partial class MainWindow : Window
     private void WelcomeNav_Click(object sender, RoutedEventArgs e) => ShowWelcomePanel();
     private void NetworkNav_Click(object sender, RoutedEventArgs e) => ShowNetworkPanel();
     private void AccessNav_Click(object sender, RoutedEventArgs e) { if (AccessNav.IsEnabled) ShowAccessPanel(); }
+    private void HttpsNav_Click(object sender, RoutedEventArgs e) { if (HttpsNav.IsEnabled) ShowHttpsPanel(); }
 
     private void ShowNetworkPanel()
     {
         _networkVisible = true;
         _accessVisible = false;
+        _httpsVisible = false;
         WelcomePanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Collapsed;
+        HttpsPanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Visible;
         WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
         AccessNav.Background = System.Windows.Media.Brushes.Transparent;
+        HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
         NetworkNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
@@ -115,11 +126,14 @@ public partial class MainWindow : Window
     {
         _networkVisible = false;
         _accessVisible = false;
+        _httpsVisible = false;
         NetworkPanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Collapsed;
+        HttpsPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Visible;
         NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
         AccessNav.Background = System.Windows.Media.Brushes.Transparent;
+        HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
         WelcomeNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Collapsed;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.welcome.begin]"));
@@ -127,6 +141,12 @@ public partial class MainWindow : Window
 
     private void Back_Click(object sender, RoutedEventArgs e)
     {
+        if (_httpsVisible)
+        {
+            ShowAccessPanel();
+            return;
+        }
+
         if (_accessVisible)
         {
             ShowNetworkPanel();
@@ -140,17 +160,71 @@ public partial class MainWindow : Window
     {
         _networkVisible = false;
         _accessVisible = true;
+        _httpsVisible = false;
         WelcomePanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Visible;
+        HttpsPanel.Visibility = Visibility.Collapsed;
         AccessNav.IsEnabled = true;
         WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
         NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
         AccessNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
         LoadNetworkInterfaces();
         ValidateAccessSelection();
+        UpdateAccessCardState();
+    }
+
+    private void ShowHttpsPanel()
+    {
+        _networkVisible = false;
+        _accessVisible = false;
+        _httpsVisible = true;
+        WelcomePanel.Visibility = Visibility.Collapsed;
+        NetworkPanel.Visibility = Visibility.Collapsed;
+        AccessPanel.Visibility = Visibility.Collapsed;
+        HttpsPanel.Visibility = Visibility.Visible;
+        HttpsNav.IsEnabled = true;
+        WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
+        NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
+        AccessNav.Background = System.Windows.Media.Brushes.Transparent;
+        HttpsNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        BackButton.Visibility = Visibility.Visible;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
+        BeginButton.IsEnabled = true;
+        UpdateHttpsCardState();
+    }
+
+    private void HttpsMode_Checked(object sender, RoutedEventArgs e)
+    {
+        if (IsLoaded) UpdateHttpsCardState();
+    }
+
+    private void UpdateAccessCardState()
+    {
+        SetChoiceCard(AccessLocalCard, AccessLocalRadio?.IsChecked == true);
+        SetChoiceCard(AccessLanCard, AccessLanRadio?.IsChecked == true);
+        SetChoiceCard(AccessCustomCard, AccessCustomRadio?.IsChecked == true);
+    }
+
+    private void UpdateHttpsCardState()
+    {
+        SetChoiceCard(HttpsInternalCard, HttpsInternalRadio?.IsChecked == true);
+        SetChoiceCard(HttpsExistingCard, HttpsExistingRadio?.IsChecked == true);
+    }
+
+    private void SetChoiceCard(Border? card, bool selected)
+    {
+        if (card is null) return;
+        card.Background = selected
+            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 244, 236))
+            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 252, 249));
+        card.BorderBrush = selected
+            ? (System.Windows.Media.Brush)FindResource("OrangeBrush")
+            : (System.Windows.Media.Brush)FindResource("BorderBrush");
+        card.BorderThickness = selected ? new Thickness(1.5) : new Thickness(1);
     }
 
     private void LoadNetworkInterfaces()
@@ -176,6 +250,7 @@ public partial class MainWindow : Window
         if (!IsLoaded) return;
         UpdateAccessInterfaceState();
         ValidateAccessSelection();
+        UpdateAccessCardState();
     }
 
     private void AccessInterface_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -458,7 +533,9 @@ public partial class MainWindow : Window
             {
                 UpdateAccessInterfaceState();
                 ValidateAccessSelection();
+                UpdateAccessCardState();
             }
+            if (_httpsVisible) UpdateHttpsCardState();
             if (_selectedDetails is not null) RenderListenerDetails();
         }
     }

@@ -93,7 +93,7 @@
                                 <TextBlock Text="{Binding [setup.step.network]}" FontWeight="SemiBold" FontSize="15" />
                             </Button>
                             <Button x:Name="AccessNav" Style="{StaticResource NavButton}" Content="{Binding [setup.step.access]}" IsEnabled="False" Click="AccessNav_Click" Cursor="Hand" />
-                            <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.https]}" IsEnabled="False" />
+                            <Button x:Name="HttpsNav" Style="{StaticResource NavButton}" Content="{Binding [setup.step.https]}" IsEnabled="False" Click="HttpsNav_Click" Cursor="Hand" />
                             <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.admin]}" IsEnabled="False" />
                             <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.summary]}" IsEnabled="False" />
                             <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.install]}" IsEnabled="False" />
@@ -295,7 +295,7 @@
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Margin="0,24,0,0">
-                            <Border Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18" Margin="0,0,0,12">
+                            <Border x:Name="AccessLocalCard" Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18" Margin="0,0,0,12">
                                 <RadioButton x:Name="AccessLocalRadio" GroupName="AccessMode" IsChecked="True" Checked="AccessMode_Checked" Tag="local">
                                     <StackPanel Margin="8,0,0,0">
                                         <TextBlock Text="{Binding [setup.access.local.title]}" FontSize="18" FontWeight="SemiBold" />
@@ -304,7 +304,7 @@
                                 </RadioButton>
                             </Border>
 
-                            <Border Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18" Margin="0,0,0,12">
+                            <Border x:Name="AccessLanCard" Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18" Margin="0,0,0,12">
                                 <RadioButton x:Name="AccessLanRadio" GroupName="AccessMode" Checked="AccessMode_Checked" Tag="lan">
                                     <StackPanel Margin="8,0,0,0">
                                         <TextBlock Text="{Binding [setup.access.lan.title]}" FontSize="18" FontWeight="SemiBold" />
@@ -313,7 +313,7 @@
                                 </RadioButton>
                             </Border>
 
-                            <Border Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18">
+                            <Border x:Name="AccessCustomCard" Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18">
                                 <StackPanel>
                                     <RadioButton x:Name="AccessCustomRadio" GroupName="AccessMode" Checked="AccessMode_Checked" Tag="custom">
                                         <StackPanel Margin="8,0,0,0">
@@ -326,6 +326,43 @@
                                     <TextBlock x:Name="AccessInterfaceEmptyText" Text="{Binding [setup.access.custom.none]}"
                                                Foreground="{StaticResource InkSoftBrush}" FontSize="12" Margin="28,8,0,0" TextWrapping="Wrap" Visibility="Collapsed" />
                                 </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid x:Name="HttpsPanel" Grid.Row="1" Margin="0,22,0,0" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel>
+                            <Border Width="82" Height="5" CornerRadius="3" Background="#F5B390" HorizontalAlignment="Left" Margin="0,0,0,18" />
+                            <TextBlock Text="{Binding [setup.https.title]}" FontSize="32" FontWeight="Bold" />
+                            <TextBlock Text="{Binding [setup.https.body]}" FontSize="15" LineHeight="22" TextWrapping="Wrap" Margin="0,8,0,0" MaxWidth="820" HorizontalAlignment="Left" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Margin="0,24,0,0">
+                            <Border x:Name="HttpsInternalCard" Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18" Margin="0,0,0,12">
+                                <RadioButton x:Name="HttpsInternalRadio" GroupName="HttpsMode" IsChecked="True" Checked="HttpsMode_Checked">
+                                    <StackPanel Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding [setup.https.internal.title]}" FontSize="18" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding [setup.https.internal.body]}" FontSize="14" Margin="0,6,0,0" TextWrapping="Wrap" />
+                                        <Border Background="{StaticResource SageBrush}" CornerRadius="8" Padding="10,7" Margin="0,10,0,0" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding [setup.https.recommended]}" FontSize="12" FontWeight="SemiBold" />
+                                        </Border>
+                                    </StackPanel>
+                                </RadioButton>
+                            </Border>
+                            <Border x:Name="HttpsExistingCard" Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18">
+                                <RadioButton x:Name="HttpsExistingRadio" GroupName="HttpsMode" Checked="HttpsMode_Checked">
+                                    <StackPanel Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding [setup.https.existing.title]}" FontSize="18" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding [setup.https.existing.body]}" FontSize="14" Margin="0,6,0,0" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding [setup.https.existing.note]}" FontSize="12" Foreground="{StaticResource InkSoftBrush}" Margin="0,8,0,0" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </RadioButton>
+                            </Border>
+                            <Border Background="{StaticResource PowderBrush}" CornerRadius="12" Padding="14" Margin="0,14,0,0">
+                                <TextBlock Text="{Binding [setup.https.notice]}" FontSize="12" LineHeight="18" TextWrapping="Wrap" />
                             </Border>
                         </StackPanel>
                     </Grid>

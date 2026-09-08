@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "Porte e accesso si adattano al tuo ambiente.",
         "setup.librarian.caption": "Tiene d’occhio le macchine con discrezione, così non devi farlo tu.",
         "setup.prototype.next.title": "DMT Setup — prototipo",
-        "setup.prototype.next.body": "Accesso DMT è funzionante. Il prossimo passo di implementazione è Connessione protetta.",
+        "setup.prototype.next.body": "La connessione protetta è configurata. Il prossimo passo di implementazione è Amministratore.",
         "setup.network.title": "Rete e porte",
         "setup.network.body": "DMT legge le porte TCP già in ascolto su questo computer. Non viene eseguita alcuna scansione di rete e non viene generato traffico.",
         "setup.network.refresh": "Aggiorna",
@@ -116,6 +116,15 @@
         "setup.network.export": "Esporta report",
         "setup.network.exportFilter": "File CSV (*.csv)|*.csv|Tutti i file (*.*)|*.*",
         "setup.network.exportErrorTitle": "Esportazione non riuscita",
-        "setup.network.exportError": "Impossibile esportare il report delle porte.\n\n{0}"
+        "setup.network.exportError": "Impossibile esportare il report delle porte.\n\n{0}",
+        "setup.https.title": "Connessione protetta",
+        "setup.https.body": "Scegli come DMT proteggerà l’accesso alla dashboard. HTTPS rimane attivo in entrambe le modalità.",
+        "setup.https.internal.title": "Certificato locale gestito da DMT",
+        "setup.https.internal.body": "DMT userà Caddy per creare e gestire un certificato tramite la propria autorità di certificazione interna. Non servono un certificato pubblico né una connessione Internet.",
+        "setup.https.recommended": "Consigliato per installazioni Home / Free",
+        "setup.https.existing.title": "Certificato esistente",
+        "setup.https.existing.body": "Usa un certificato già gestito dalla tua organizzazione o infrastruttura.",
+        "setup.https.existing.note": "La selezione e la convalida del certificato saranno implementate prima di abilitare la fase di installazione.",
+        "setup.https.notice": "In questa schermata non vengono modificati certificati, archivio di attendibilità, firewall o impostazioni di sistema. Le modifiche saranno applicate solo dopo il riepilogo e la conferma finale."
     }
 }

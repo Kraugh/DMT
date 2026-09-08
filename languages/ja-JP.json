@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "ポートとアクセス方法を環境に合わせて設定します。",
         "setup.librarian.caption": "機械を静かに見守るので、あなたがずっと監視する必要はありません。",
         "setup.prototype.next.title": "DMT Setup — プロトタイプ",
-        "setup.prototype.next.body": "DMT アクセスは動作しています。次の実装ステップは保護された接続です。",
+        "setup.prototype.next.body": "保護された接続の設定が完了しました。次の実装ステップは管理者です。",
         "setup.network.title": "ネットワークとポート",
         "setup.network.body": "DMT はこのコンピューターですでに待ち受けている TCP ポートを読み取ります。ネットワークスキャンや通信の生成は行いません。",
         "setup.network.refresh": "更新",
@@ -116,6 +116,15 @@
         "setup.network.export": "レポートをエクスポート",
         "setup.network.exportFilter": "CSV ファイル (*.csv)|*.csv|すべてのファイル (*.*)|*.*",
         "setup.network.exportErrorTitle": "エクスポートに失敗しました",
-        "setup.network.exportError": "ポート レポートをエクスポートできませんでした。\n\n{0}"
+        "setup.network.exportError": "ポート レポートをエクスポートできませんでした。\n\n{0}",
+        "setup.https.title": "保護された接続",
+        "setup.https.body": "DMT ダッシュボードへのアクセスを保護する方法を選択します。どちらのモードでも HTTPS は有効です。",
+        "setup.https.internal.title": "DMT が管理するローカル証明書",
+        "setup.https.internal.body": "DMT は Caddy の内部認証局を使用して証明書を作成・管理します。公開証明書やインターネット接続は必要ありません。",
+        "setup.https.recommended": "Home / Free インストールに推奨",
+        "setup.https.existing.title": "既存の証明書",
+        "setup.https.existing.body": "組織またはインフラストラクチャですでに管理されている証明書を使用します。",
+        "setup.https.existing.note": "証明書の選択と検証は、インストール手順を有効にする前に実装されます。",
+        "setup.https.notice": "この画面では、証明書、信頼ストア、ファイアウォール、システム設定は変更されません。変更は最終確認画面で承認した後にのみ適用されます。"
     }
 }

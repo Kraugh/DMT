@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "Ports and access are adapted to your environment.",
         "setup.librarian.caption": "Quietly keeping an eye on the machines, so you do not have to.",
         "setup.prototype.next.title": "DMT Setup — prototype",
-        "setup.prototype.next.body": "DMT access is working. The next implementation step is Protected connection.",
+        "setup.prototype.next.body": "Protected connection is configured. The next implementation step is Administrator.",
         "setup.network.title": "Network and ports",
         "setup.network.body": "DMT reads the TCP listeners already present on this computer. No network scan is performed and no traffic is generated.",
         "setup.network.refresh": "Refresh",
@@ -116,6 +116,15 @@
         "setup.network.export": "Export report",
         "setup.network.exportFilter": "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
         "setup.network.exportErrorTitle": "Export failed",
-        "setup.network.exportError": "The port report could not be exported.\n\n{0}"
+        "setup.network.exportError": "The port report could not be exported.\n\n{0}",
+        "setup.https.title": "Protected connection",
+        "setup.https.body": "Choose how DMT will protect access to the dashboard. HTTPS remains enabled in both modes.",
+        "setup.https.internal.title": "DMT-managed local certificate",
+        "setup.https.internal.body": "DMT will use Caddy to create and manage a certificate through its internal certification authority. No public certificate or Internet connection is required.",
+        "setup.https.recommended": "Recommended for Home / Free installations",
+        "setup.https.existing.title": "Existing certificate",
+        "setup.https.existing.body": "Use a certificate already managed by your organization or infrastructure.",
+        "setup.https.existing.note": "Certificate selection and validation will be implemented before the installation step is enabled.",
+        "setup.https.notice": "No certificate, trust store, firewall or system setting is changed on this screen. Changes will be applied only after the final summary and confirmation."
     }
 }

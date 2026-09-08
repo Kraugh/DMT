@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "Les ports et l’accès s’adaptent à votre environnement.",
         "setup.librarian.caption": "Il garde discrètement un œil sur les machines pour que vous n’ayez pas à le faire.",
         "setup.prototype.next.title": "DMT Setup — prototype",
-        "setup.prototype.next.body": "L’accès à DMT fonctionne. La prochaine étape d’implémentation est la connexion protégée.",
+        "setup.prototype.next.body": "La connexion protégée est configurée. La prochaine étape d’implémentation est Administrateur.",
         "setup.network.title": "Réseau et ports",
         "setup.network.body": "DMT lit les ports TCP déjà en écoute sur cet ordinateur. Aucun balayage réseau n’est effectué et aucun trafic n’est généré.",
         "setup.network.refresh": "Actualiser",
@@ -116,6 +116,15 @@
         "setup.network.export": "Exporter le rapport",
         "setup.network.exportFilter": "Fichiers CSV (*.csv)|*.csv|Tous les fichiers (*.*)|*.*",
         "setup.network.exportErrorTitle": "Échec de l’exportation",
-        "setup.network.exportError": "Le rapport des ports n’a pas pu être exporté.\n\n{0}"
+        "setup.network.exportError": "Le rapport des ports n’a pas pu être exporté.\n\n{0}",
+        "setup.https.title": "Connexion protégée",
+        "setup.https.body": "Choisissez comment DMT protégera l’accès au tableau de bord. HTTPS reste activé dans les deux modes.",
+        "setup.https.internal.title": "Certificat local géré par DMT",
+        "setup.https.internal.body": "DMT utilisera Caddy pour créer et gérer un certificat via son autorité de certification interne. Aucun certificat public ni connexion Internet n’est requis.",
+        "setup.https.recommended": "Recommandé pour les installations Home / Free",
+        "setup.https.existing.title": "Certificat existant",
+        "setup.https.existing.body": "Utilisez un certificat déjà géré par votre organisation ou votre infrastructure.",
+        "setup.https.existing.note": "La sélection et la validation du certificat seront implémentées avant l’activation de l’étape d’installation.",
+        "setup.https.notice": "Aucun certificat, magasin de confiance, pare-feu ou paramètre système n’est modifié sur cet écran. Les modifications ne seront appliquées qu’après le récapitulatif et la confirmation finale."
     }
 }

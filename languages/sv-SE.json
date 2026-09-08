@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "Portar och åtkomst anpassas till din miljö.",
         "setup.librarian.caption": "Håller diskret ett öga på maskinerna så att du slipper.",
         "setup.prototype.next.title": "DMT Setup — prototyp",
-        "setup.prototype.next.body": "Åtkomst till DMT fungerar. Nästa implementeringssteg är skyddad anslutning.",
+        "setup.prototype.next.body": "Den skyddade anslutningen är konfigurerad. Nästa implementeringssteg är Administratör.",
         "setup.network.title": "Nätverk och portar",
         "setup.network.body": "DMT läser de TCP-lyssnare som redan finns på den här datorn. Ingen nätverksskanning görs och ingen trafik skapas.",
         "setup.network.refresh": "Uppdatera",
@@ -116,6 +116,15 @@
         "setup.network.export": "Exportera rapport",
         "setup.network.exportFilter": "CSV-filer (*.csv)|*.csv|Alla filer (*.*)|*.*",
         "setup.network.exportErrorTitle": "Exporten misslyckades",
-        "setup.network.exportError": "Portrapporten kunde inte exporteras.\n\n{0}"
+        "setup.network.exportError": "Portrapporten kunde inte exporteras.\n\n{0}",
+        "setup.https.title": "Skyddad anslutning",
+        "setup.https.body": "Välj hur DMT ska skydda åtkomsten till instrumentpanelen. HTTPS förblir aktiverat i båda lägena.",
+        "setup.https.internal.title": "Lokalt certifikat hanterat av DMT",
+        "setup.https.internal.body": "DMT använder Caddy för att skapa och hantera ett certifikat via dess interna certifikatutfärdare. Inget offentligt certifikat eller internetanslutning krävs.",
+        "setup.https.recommended": "Rekommenderas för Home / Free-installationer",
+        "setup.https.existing.title": "Befintligt certifikat",
+        "setup.https.existing.body": "Använd ett certifikat som redan hanteras av din organisation eller infrastruktur.",
+        "setup.https.existing.note": "Val och validering av certifikat implementeras innan installationssteget aktiveras.",
+        "setup.https.notice": "Inga certifikat, betrodda certifikatarkiv, brandväggs- eller systeminställningar ändras på den här skärmen. Ändringar tillämpas först efter sammanfattningen och den slutliga bekräftelsen."
     }
 }

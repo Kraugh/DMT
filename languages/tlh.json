@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "DuHmeylIjvaD lojmItmey ’elmeH je ghunlu’.",
         "setup.librarian.caption": "De’wI’mey legh; vaj bIleghnISbe’.",
         "setup.prototype.next.title": "DMT Setup — wa’DIch",
-        "setup.prototype.next.body": "DMT naw' Qap. QawHaq rarbogh mIw veb 'oH rarwI' Qan'e'.",
+        "setup.prototype.next.body": "QumwI’ Qanlu’bogh cherlu’pu’. Administrator ghaH mIw veb’e’.",
         "setup.network.title": "SIbDoH rarghmey je",
         "setup.network.body": "De’wI’vamDaq TCP rarghmey lo’lu’bogh legh DMT. rarghHomDaq nejbe’ ’ej pagh Qum ruch.",
         "setup.network.refresh": "nuvqa’",
@@ -116,6 +116,15 @@
         "setup.network.export": "QonoS ngeH",
         "setup.network.exportFilter": "CSV De’ (*.csv)|*.csv|Hoch De’ (*.*)|*.*",
         "setup.network.exportErrorTitle": "ngeH Qapbe’",
-        "setup.network.exportError": "lojmIt QonoS ngeHlu’pu’be’.\n\n{0}"
+        "setup.network.exportError": "lojmIt QonoS ngeHlu’pu’be’.\n\n{0}",
+        "setup.https.title": "QumwI’ Qanlu’",
+        "setup.https.body": "DMT SeHlaw naw’ QanmeH mIw yIwIv. Hoch DuHmeyDaq HTTPS lo’lu’.",
+        "setup.https.internal.title": "DMT local chaw’ Qorghbogh",
+        "setup.https.internal.body": "Caddy lo’ DMT; internal CA lo’taHvIS chaw’ chenmoH ’ej Qorgh. public chaw’ Internet rargh je poQbe’.",
+        "setup.https.recommended": "Home / Free jomlu’DI’ QaQqu’",
+        "setup.https.existing.title": "chaw’ tu’lu’bogh",
+        "setup.https.existing.body": "chaw’ Qorghbogh tlhIngan Hol yejHaD pagh infrastructure yIlo’.",
+        "setup.https.existing.note": "jom mIw chu’pa’ chaw’ wIvmeH ’ej tobmeH mIw chenmoHlu’.",
+        "setup.https.notice": "naDev chaw’, trust store, firewall pagh system setting choHlu’be’. Summary Qav ’ej lajta’ghach qaSpa’ choHmey lo’lu’be’."
     }
 }

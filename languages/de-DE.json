@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "Ports und Zugriff werden an Ihre Umgebung angepasst.",
         "setup.librarian.caption": "Behält die Maschinen unauffällig im Blick, damit Sie es nicht müssen.",
         "setup.prototype.next.title": "DMT Setup — Prototyp",
-        "setup.prototype.next.body": "Der DMT-Zugriff funktioniert. Der nächste Implementierungsschritt ist die geschützte Verbindung.",
+        "setup.prototype.next.body": "Die geschützte Verbindung ist konfiguriert. Der nächste Implementierungsschritt ist Administrator.",
         "setup.network.title": "Netzwerk und Ports",
         "setup.network.body": "DMT liest die bereits auf diesem Computer vorhandenen TCP-Listener. Es wird kein Netzwerkscan durchgeführt und kein Datenverkehr erzeugt.",
         "setup.network.refresh": "Aktualisieren",
@@ -116,6 +116,15 @@
         "setup.network.export": "Bericht exportieren",
         "setup.network.exportFilter": "CSV-Dateien (*.csv)|*.csv|Alle Dateien (*.*)|*.*",
         "setup.network.exportErrorTitle": "Export fehlgeschlagen",
-        "setup.network.exportError": "Der Portbericht konnte nicht exportiert werden.\n\n{0}"
+        "setup.network.exportError": "Der Portbericht konnte nicht exportiert werden.\n\n{0}",
+        "setup.https.title": "Geschützte Verbindung",
+        "setup.https.body": "Wählen Sie, wie DMT den Zugriff auf das Dashboard schützt. HTTPS bleibt in beiden Modi aktiviert.",
+        "setup.https.internal.title": "Von DMT verwaltetes lokales Zertifikat",
+        "setup.https.internal.body": "DMT verwendet Caddy, um über seine interne Zertifizierungsstelle ein Zertifikat zu erstellen und zu verwalten. Ein öffentliches Zertifikat oder eine Internetverbindung ist nicht erforderlich.",
+        "setup.https.recommended": "Empfohlen für Home-/Free-Installationen",
+        "setup.https.existing.title": "Vorhandenes Zertifikat",
+        "setup.https.existing.body": "Verwenden Sie ein Zertifikat, das bereits von Ihrer Organisation oder Infrastruktur verwaltet wird.",
+        "setup.https.existing.note": "Auswahl und Validierung des Zertifikats werden implementiert, bevor der Installationsschritt aktiviert wird.",
+        "setup.https.notice": "Auf diesem Bildschirm werden keine Zertifikate, Vertrauensspeicher, Firewall- oder Systemeinstellungen geändert. Änderungen werden erst nach Zusammenfassung und endgültiger Bestätigung angewendet."
     }
 }

@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "Los puertos y el acceso se adaptan a tu entorno.",
         "setup.librarian.caption": "Vigila discretamente las máquinas para que tú no tengas que hacerlo.",
         "setup.prototype.next.title": "DMT Setup — prototipo",
-        "setup.prototype.next.body": "El acceso a DMT funciona. El siguiente paso de implementación es la conexión protegida.",
+        "setup.prototype.next.body": "La conexión protegida está configurada. El siguiente paso de implementación es Administrador.",
         "setup.network.title": "Red y puertos",
         "setup.network.body": "DMT lee los puertos TCP que ya están escuchando en este equipo. No se realiza ningún escaneo de red ni se genera tráfico.",
         "setup.network.refresh": "Actualizar",
@@ -116,6 +116,15 @@
         "setup.network.export": "Exportar informe",
         "setup.network.exportFilter": "Archivos CSV (*.csv)|*.csv|Todos los archivos (*.*)|*.*",
         "setup.network.exportErrorTitle": "Error de exportación",
-        "setup.network.exportError": "No se pudo exportar el informe de puertos.\n\n{0}"
+        "setup.network.exportError": "No se pudo exportar el informe de puertos.\n\n{0}",
+        "setup.https.title": "Conexión protegida",
+        "setup.https.body": "Elige cómo protegerá DMT el acceso al panel. HTTPS permanece activado en ambos modos.",
+        "setup.https.internal.title": "Certificado local gestionado por DMT",
+        "setup.https.internal.body": "DMT usará Caddy para crear y gestionar un certificado mediante su autoridad de certificación interna. No se requiere un certificado público ni conexión a Internet.",
+        "setup.https.recommended": "Recomendado para instalaciones Home / Free",
+        "setup.https.existing.title": "Certificado existente",
+        "setup.https.existing.body": "Usa un certificado ya gestionado por tu organización o infraestructura.",
+        "setup.https.existing.note": "La selección y validación del certificado se implementarán antes de habilitar el paso de instalación.",
+        "setup.https.notice": "En esta pantalla no se modifica ningún certificado, almacén de confianza, cortafuegos ni configuración del sistema. Los cambios solo se aplicarán después del resumen y la confirmación final."
     }
 }

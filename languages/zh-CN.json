@@ -50,7 +50,7 @@
         "setup.benefit.fit.body": "端口和访问方式会根据你的环境进行配置。",
         "setup.librarian.caption": "安静地关注机器状态，让你不必一直盯着它们。",
         "setup.prototype.next.title": "DMT Setup — 原型",
-        "setup.prototype.next.body": "DMT 访问已可用。下一步实现受保护的连接。",
+        "setup.prototype.next.body": "受保护的连接已配置。下一步实现管理员设置。",
         "setup.network.title": "网络和端口",
         "setup.network.body": "DMT 读取此计算机上已有的 TCP 监听端口。不会执行网络扫描，也不会产生网络流量。",
         "setup.network.refresh": "刷新",
@@ -116,6 +116,15 @@
         "setup.network.export": "导出报告",
         "setup.network.exportFilter": "CSV 文件 (*.csv)|*.csv|所有文件 (*.*)|*.*",
         "setup.network.exportErrorTitle": "导出失败",
-        "setup.network.exportError": "无法导出端口报告。\n\n{0}"
+        "setup.network.exportError": "无法导出端口报告。\n\n{0}",
+        "setup.https.title": "受保护的连接",
+        "setup.https.body": "选择 DMT 保护仪表板访问的方式。两种模式都会保持 HTTPS 启用。",
+        "setup.https.internal.title": "由 DMT 管理的本地证书",
+        "setup.https.internal.body": "DMT 将使用 Caddy 的内部证书颁发机构创建和管理证书。不需要公共证书或互联网连接。",
+        "setup.https.recommended": "推荐用于 Home / Free 安装",
+        "setup.https.existing.title": "现有证书",
+        "setup.https.existing.body": "使用已由您的组织或基础设施管理的证书。",
+        "setup.https.existing.note": "在启用安装步骤之前，将实现证书选择和验证。",
+        "setup.https.notice": "此页面不会更改证书、信任存储、防火墙或系统设置。只有在最终摘要和确认后才会应用更改。"
     }
 }
