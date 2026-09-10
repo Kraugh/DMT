@@ -23,6 +23,8 @@ public partial class MainWindow : Window
     private bool _networkVisible;
     private bool _accessVisible;
     private bool _httpsVisible;
+    private bool _adminVisible;
+    private bool _summaryVisible;
     private ListenerDetails? _selectedDetails;
     private bool _portSelectionInitialized;
 
@@ -76,9 +78,22 @@ public partial class MainWindow : Window
 
     private void Begin_Click(object sender, RoutedEventArgs e)
     {
-        if (_httpsVisible)
+        if (_summaryVisible)
         {
             NextStepOverlay.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (_adminVisible)
+        {
+            if (!ValidateAdminSelection()) return;
+            ShowSummaryPanel();
+            return;
+        }
+
+        if (_httpsVisible)
+        {
+            ShowAdminPanel();
             return;
         }
 
@@ -103,12 +118,18 @@ public partial class MainWindow : Window
     private void NetworkNav_Click(object sender, RoutedEventArgs e) => ShowNetworkPanel();
     private void AccessNav_Click(object sender, RoutedEventArgs e) { if (AccessNav.IsEnabled) ShowAccessPanel(); }
     private void HttpsNav_Click(object sender, RoutedEventArgs e) { if (HttpsNav.IsEnabled) ShowHttpsPanel(); }
+    private void AdminNav_Click(object sender, RoutedEventArgs e) { if (AdminNav.IsEnabled) ShowAdminPanel(); }
+    private void SummaryNav_Click(object sender, RoutedEventArgs e) { if (SummaryNav.IsEnabled) ShowSummaryPanel(); }
 
     private void ShowNetworkPanel()
     {
         _networkVisible = true;
         _accessVisible = false;
         _httpsVisible = false;
+        _adminVisible = false;
+        _summaryVisible = false;
+        AdminPanel.Visibility = Visibility.Collapsed;
+        SummaryPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Collapsed;
         HttpsPanel.Visibility = Visibility.Collapsed;
@@ -116,6 +137,8 @@ public partial class MainWindow : Window
         WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
         AccessNav.Background = System.Windows.Media.Brushes.Transparent;
         HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
+        AdminNav.Background = System.Windows.Media.Brushes.Transparent;
+        SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
         NetworkNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
@@ -127,6 +150,10 @@ public partial class MainWindow : Window
         _networkVisible = false;
         _accessVisible = false;
         _httpsVisible = false;
+        _adminVisible = false;
+        _summaryVisible = false;
+        AdminPanel.Visibility = Visibility.Collapsed;
+        SummaryPanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Collapsed;
         HttpsPanel.Visibility = Visibility.Collapsed;
@@ -134,6 +161,8 @@ public partial class MainWindow : Window
         NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
         AccessNav.Background = System.Windows.Media.Brushes.Transparent;
         HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
+        AdminNav.Background = System.Windows.Media.Brushes.Transparent;
+        SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
         WelcomeNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Collapsed;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.welcome.begin]"));
@@ -141,6 +170,18 @@ public partial class MainWindow : Window
 
     private void Back_Click(object sender, RoutedEventArgs e)
     {
+        if (_summaryVisible)
+        {
+            ShowAdminPanel();
+            return;
+        }
+
+        if (_adminVisible)
+        {
+            ShowHttpsPanel();
+            return;
+        }
+
         if (_httpsVisible)
         {
             ShowAccessPanel();
@@ -161,6 +202,10 @@ public partial class MainWindow : Window
         _networkVisible = false;
         _accessVisible = true;
         _httpsVisible = false;
+        _adminVisible = false;
+        _summaryVisible = false;
+        AdminPanel.Visibility = Visibility.Collapsed;
+        SummaryPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Visible;
@@ -170,6 +215,8 @@ public partial class MainWindow : Window
         NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
         AccessNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
+        AdminNav.Background = System.Windows.Media.Brushes.Transparent;
+        SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
         LoadNetworkInterfaces();
@@ -182,6 +229,10 @@ public partial class MainWindow : Window
         _networkVisible = false;
         _accessVisible = false;
         _httpsVisible = true;
+        _adminVisible = false;
+        _summaryVisible = false;
+        AdminPanel.Visibility = Visibility.Collapsed;
+        SummaryPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Collapsed;
@@ -190,11 +241,91 @@ public partial class MainWindow : Window
         WelcomeNav.Background = System.Windows.Media.Brushes.Transparent;
         NetworkNav.Background = System.Windows.Media.Brushes.Transparent;
         AccessNav.Background = System.Windows.Media.Brushes.Transparent;
+        AdminNav.Background = System.Windows.Media.Brushes.Transparent;
+        SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
         HttpsNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
         BeginButton.IsEnabled = true;
         UpdateHttpsCardState();
+    }
+
+    private void ShowAdminPanel()
+    {
+        _networkVisible = false;
+        _accessVisible = false;
+        _httpsVisible = false;
+        _adminVisible = true;
+        _summaryVisible = false;
+        WelcomePanel.Visibility = Visibility.Collapsed;
+        NetworkPanel.Visibility = Visibility.Collapsed;
+        AccessPanel.Visibility = Visibility.Collapsed;
+        HttpsPanel.Visibility = Visibility.Collapsed;
+        SummaryPanel.Visibility = Visibility.Collapsed;
+        AdminPanel.Visibility = Visibility.Visible;
+        AdminNav.IsEnabled = true;
+        WelcomeNav.Background = NetworkNav.Background = AccessNav.Background = HttpsNav.Background = SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
+        AdminNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        BackButton.Visibility = Visibility.Visible;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
+        ValidateAdminSelection();
+    }
+
+    private void ShowSummaryPanel()
+    {
+        if (!ValidateAdminSelection()) return;
+        _networkVisible = false;
+        _accessVisible = false;
+        _httpsVisible = false;
+        _adminVisible = false;
+        _summaryVisible = true;
+        WelcomePanel.Visibility = NetworkPanel.Visibility = AccessPanel.Visibility = HttpsPanel.Visibility = AdminPanel.Visibility = Visibility.Collapsed;
+        SummaryPanel.Visibility = Visibility.Visible;
+        SummaryNav.IsEnabled = true;
+        WelcomeNav.Background = NetworkNav.Background = AccessNav.Background = HttpsNav.Background = AdminNav.Background = System.Windows.Media.Brushes.Transparent;
+        SummaryNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        BackButton.Visibility = Visibility.Visible;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.summary.install]"));
+        BeginButton.IsEnabled = true;
+        RenderSummary();
+    }
+
+    private void AdminField_Changed(object sender, RoutedEventArgs e)
+    {
+        if (IsLoaded) ValidateAdminSelection();
+    }
+
+    private bool ValidateAdminSelection()
+    {
+        if (BeginButton is null || AdminUsernameBox is null || AdminPasswordBox is null || AdminConfirmPasswordBox is null || AdminValidationText is null) return false;
+        var username = AdminUsernameBox.Text.Trim();
+        var password = AdminPasswordBox.Password;
+        string key;
+        bool valid;
+        if (string.IsNullOrWhiteSpace(username)) { key = "setup.admin.validation.username"; valid = false; }
+        else if (password.Length < 12) { key = "setup.admin.validation.length"; valid = false; }
+        else if (!string.Equals(password, AdminConfirmPasswordBox.Password, StringComparison.Ordinal)) { key = "setup.admin.validation.match"; valid = false; }
+        else { key = "setup.admin.validation.ok"; valid = true; }
+        AdminValidationText.Text = _localization[key];
+        AdminValidationText.Foreground = valid
+            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(48, 122, 76))
+            : (System.Windows.Media.Brush)FindResource("InkSoftBrush");
+        BeginButton.IsEnabled = valid;
+        return valid;
+    }
+
+    private void RenderSummary()
+    {
+        if (SummaryPortText is null) return;
+        SummaryPortText.Text = SelectedPortBox.Text.Trim();
+        SummaryAccessText.Text = AccessLocalRadio.IsChecked == true ? _localization["setup.access.local.title"]
+            : AccessLanRadio.IsChecked == true ? _localization["setup.access.lan.title"]
+            : string.Format(_localization["setup.summary.customAccess"], (AccessInterfaceBox.SelectedItem as NetworkInterfaceInfo)?.DisplayLabel ?? "");
+        SummaryHttpsText.Text = HttpsInternalRadio.IsChecked == true ? _localization["setup.https.internal.title"] : _localization["setup.https.existing.title"];
+        var displayName = AdminDisplayNameBox.Text.Trim();
+        SummaryAdminText.Text = string.IsNullOrWhiteSpace(displayName) || displayName.Equals(AdminUsernameBox.Text.Trim(), StringComparison.OrdinalIgnoreCase)
+            ? AdminUsernameBox.Text.Trim()
+            : string.Format(_localization["setup.summary.adminWithName"], AdminUsernameBox.Text.Trim(), displayName);
     }
 
     private void HttpsMode_Checked(object sender, RoutedEventArgs e)
@@ -536,6 +667,8 @@ public partial class MainWindow : Window
                 UpdateAccessCardState();
             }
             if (_httpsVisible) UpdateHttpsCardState();
+            if (_adminVisible) ValidateAdminSelection();
+            if (_summaryVisible) RenderSummary();
             if (_selectedDetails is not null) RenderListenerDetails();
         }
     }

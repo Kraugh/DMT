@@ -94,8 +94,8 @@
                             </Button>
                             <Button x:Name="AccessNav" Style="{StaticResource NavButton}" Content="{Binding [setup.step.access]}" IsEnabled="False" Click="AccessNav_Click" Cursor="Hand" />
                             <Button x:Name="HttpsNav" Style="{StaticResource NavButton}" Content="{Binding [setup.step.https]}" IsEnabled="False" Click="HttpsNav_Click" Cursor="Hand" />
-                            <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.admin]}" IsEnabled="False" />
-                            <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.summary]}" IsEnabled="False" />
+                            <Button x:Name="AdminNav" Style="{StaticResource NavButton}" Content="{Binding [setup.step.admin]}" IsEnabled="False" Click="AdminNav_Click" Cursor="Hand" />
+                            <Button x:Name="SummaryNav" Style="{StaticResource NavButton}" Content="{Binding [setup.step.summary]}" IsEnabled="False" Click="SummaryNav_Click" Cursor="Hand" />
                             <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.install]}" IsEnabled="False" />
                             <Button Style="{StaticResource NavButton}" Content="{Binding [setup.step.complete]}" IsEnabled="False" />
                         </StackPanel>
@@ -365,6 +365,59 @@
                                 <TextBlock Text="{Binding [setup.https.notice]}" FontSize="12" LineHeight="18" TextWrapping="Wrap" />
                             </Border>
                         </StackPanel>
+                    </Grid>
+
+
+                    <Grid x:Name="AdminPanel" Grid.Row="1" Margin="0,22,0,0" Visibility="Collapsed">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                        <StackPanel>
+                            <Border Width="82" Height="5" CornerRadius="3" Background="#F5B390" HorizontalAlignment="Left" Margin="0,0,0,18" />
+                            <TextBlock Text="{Binding [setup.admin.title]}" FontSize="32" FontWeight="Bold" />
+                            <TextBlock Text="{Binding [setup.admin.body]}" FontSize="15" LineHeight="22" TextWrapping="Wrap" Margin="0,8,0,0" MaxWidth="820" HorizontalAlignment="Left" />
+                        </StackPanel>
+                        <Grid Grid.Row="1" Margin="0,22,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="22"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{Binding [setup.admin.username]}" FontSize="13" FontWeight="SemiBold" />
+                                <TextBox x:Name="AdminUsernameBox" Height="36" Margin="0,6,0,14" Padding="9,5" TextChanged="AdminField_Changed" />
+                                <TextBlock Text="{Binding [setup.admin.displayName]}" FontSize="13" FontWeight="SemiBold" />
+                                <TextBox x:Name="AdminDisplayNameBox" Height="36" Margin="0,6,0,14" Padding="9,5" />
+                                <TextBlock Text="{Binding [setup.admin.displayNameHint]}" FontSize="12" Foreground="{StaticResource InkSoftBrush}" TextWrapping="Wrap" Margin="0,-8,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="{Binding [setup.admin.password]}" FontSize="13" FontWeight="SemiBold" />
+                                <PasswordBox x:Name="AdminPasswordBox" Height="36" Margin="0,6,0,14" Padding="9,5" PasswordChanged="AdminField_Changed" />
+                                <TextBlock Text="{Binding [setup.admin.confirmPassword]}" FontSize="13" FontWeight="SemiBold" />
+                                <PasswordBox x:Name="AdminConfirmPasswordBox" Height="36" Margin="0,6,0,10" Padding="9,5" PasswordChanged="AdminField_Changed" />
+                                <TextBlock x:Name="AdminValidationText" FontSize="12" Foreground="{StaticResource InkSoftBrush}" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <Border Grid.ColumnSpan="3" VerticalAlignment="Bottom" Background="{StaticResource PowderBrush}" CornerRadius="12" Padding="14" Margin="0,18,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding [setup.admin.recovery.title]}" FontSize="13" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding [setup.admin.recovery.body]}" FontSize="12" LineHeight="18" TextWrapping="Wrap" Margin="0,5,0,0" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+                    <Grid x:Name="SummaryPanel" Grid.Row="1" Margin="0,22,0,0" Visibility="Collapsed">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                        <StackPanel>
+                            <Border Width="82" Height="5" CornerRadius="3" Background="#F5B390" HorizontalAlignment="Left" Margin="0,0,0,18" />
+                            <TextBlock Text="{Binding [setup.summary.title]}" FontSize="32" FontWeight="Bold" />
+                            <TextBlock Text="{Binding [setup.summary.body]}" FontSize="15" LineHeight="22" TextWrapping="Wrap" Margin="0,8,0,0" />
+                        </StackPanel>
+                        <Border Grid.Row="1" Background="#FFFCF9" CornerRadius="14" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="20" Margin="0,22,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                                <TextBlock Text="{Binding [setup.summary.port]}" FontWeight="SemiBold" Margin="0,0,12,12"/><TextBlock x:Name="SummaryPortText" Grid.Column="1" Margin="0,0,0,12"/>
+                                <TextBlock Grid.Row="1" Text="{Binding [setup.summary.access]}" FontWeight="SemiBold" Margin="0,0,12,12"/><TextBlock x:Name="SummaryAccessText" Grid.Row="1" Grid.Column="1" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="2" Text="{Binding [setup.summary.https]}" FontWeight="SemiBold" Margin="0,0,12,12"/><TextBlock x:Name="SummaryHttpsText" Grid.Row="2" Grid.Column="1" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="3" Text="{Binding [setup.summary.admin]}" FontWeight="SemiBold" Margin="0,0,12,12"/><TextBlock x:Name="SummaryAdminText" Grid.Row="3" Grid.Column="1" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="4" Text="{Binding [setup.summary.recovery]}" FontWeight="SemiBold" Margin="0,0,12,0"/><TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding [setup.summary.recoveryValue]}" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
                     </Grid>
                     <Grid Grid.Row="2" Margin="0,22,0,0">
                         <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
