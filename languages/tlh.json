@@ -149,6 +149,26 @@
         "setup.summary.recoveryValue": "serverDaq neH; Windows qumwI’ DIb poQlu’",
         "setup.summary.customAccess": "le’ — {0}",
         "setup.summary.adminWithName": "{0} — {1}",
-        "setup.summary.install": "jomlu’meH yItaH"
+        "setup.summary.install": "jomlu’meH yItaH",
+        "setup.install.title": "jom",
+        "setup.install.body": "DMT jom Qu’ taghlu’meH SuvwI’ DIb poQlu’. wa’logh neH Windows woQ chaw’ tlhob; ghIq UAC tlhobqa’be’taHvIS jom Qu’ ta’ mIw woQ.",
+        "setup.install.uac.title": "wa’logh neH loHwI’ chaw’",
+        "setup.install.uac.body": "woQ Hutlh setup DevwI’. jom taghDI’ neH UAC tlhob mIw pIm.",
+        "setup.install.status.ready": "loHwI’ chaw’ tlhoblu’meH SuH.",
+        "setup.install.status.requestingUac": "Windows loHwI’ chaw’ loS…",
+        "setup.install.foundation.title": "chenmoHmeH Qoylu’bogh Doch",
+        "setup.install.foundation.body": "mIw woQ, jom nab, DMT Dochmey ghajwI’ je waH buildvam. wej Caddy, service, certificate, firewall chut, file je jom.",
+        "setup.install.returnSummary": "De’ pojqa’Daq chegh",
+        "setup.install.progress.elevated": "loHwI’ chaw’ Hevlu’.",
+        "setup.install.progress.validating": "jom nab waH…",
+        "setup.install.progress.manifest": "DMT Dochmey tetlh chenmoH…",
+        "setup.install.progress.foundationReady": "jom mIw Qoylu’bogh Doch SuH.",
+        "setup.install.status.foundationComplete": "Qoylu’bogh Doch waHta’ Qap. system choHbe’lu’.",
+        "setup.install.error.launch": "jom mIw woQ taghlaHbe’.",
+        "setup.install.uac.cancelled": "loHwI’ chaw’ qIlta’. system choHbe’lu’.",
+        "setup.install.error.cancelled": "jom nab Qu’ qIlta’.",
+        "setup.install.error.communication": "jom mIw woQ rarlu’laHbe’.",
+        "setup.install.error.plan": "jom nab qab pagh laDlu’laHbe’.",
+        "setup.install.error.notElevated": "jom mIwvaD loHwI’ DIb nobbe’lu’."
     }
 }

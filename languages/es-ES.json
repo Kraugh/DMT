@@ -149,6 +149,26 @@
         "setup.summary.recoveryValue": "Solo local, con privilegios administrativos de Windows",
         "setup.summary.customAccess": "Personalizado — {0}",
         "setup.summary.adminWithName": "{0} — {1}",
-        "setup.summary.install": "Continuar a la instalación"
+        "setup.summary.install": "Continuar a la instalación",
+        "setup.install.title": "Instalación",
+        "setup.install.body": "DMT está listo para iniciar la fase de instalación con privilegios. Windows solicitará una sola autorización de administrador; después, el proceso elevado podrá continuar sin más avisos de UAC.",
+        "setup.install.uac.title": "Una sola autorización de administrador",
+        "setup.install.uac.body": "El asistente permanece sin elevar. Un proceso separado solicita UAC únicamente al comenzar la instalación.",
+        "setup.install.status.ready": "Listo para solicitar autorización de administrador.",
+        "setup.install.status.requestingUac": "Esperando la autorización de administrador de Windows…",
+        "setup.install.foundation.title": "Base de desarrollo",
+        "setup.install.foundation.body": "Esta compilación valida el canal elevado, el plan de instalación y la propiedad de los recursos de DMT. Todavía no instala Caddy, servicios, certificados, reglas de firewall ni archivos.",
+        "setup.install.returnSummary": "Volver al resumen",
+        "setup.install.progress.elevated": "Autorización de administrador recibida.",
+        "setup.install.progress.validating": "Validando el plan de instalación…",
+        "setup.install.progress.manifest": "Preparando el manifiesto de recursos gestionados por DMT…",
+        "setup.install.progress.foundationReady": "La base del motor de instalación está lista.",
+        "setup.install.status.foundationComplete": "Prueba de la base completada correctamente. No se aplicaron cambios al sistema.",
+        "setup.install.error.launch": "No se pudo iniciar el proceso de instalación elevado.",
+        "setup.install.uac.cancelled": "Autorización de administrador cancelada. No se aplicaron cambios al sistema.",
+        "setup.install.error.cancelled": "La operación de preparación de la instalación fue cancelada.",
+        "setup.install.error.communication": "Falló la comunicación con el proceso de instalación elevado.",
+        "setup.install.error.plan": "El plan de instalación no es válido o no se pudo leer.",
+        "setup.install.error.notElevated": "El proceso de instalación no recibió privilegios de administrador."
     }
 }

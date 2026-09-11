@@ -149,6 +149,26 @@
         "setup.summary.recoveryValue": "Endast lokalt, med Windows-administratörsbehörighet",
         "setup.summary.customAccess": "Anpassad — {0}",
         "setup.summary.adminWithName": "{0} — {1}",
-        "setup.summary.install": "Fortsätt till installation"
+        "setup.summary.install": "Fortsätt till installation",
+        "setup.install.title": "Installation",
+        "setup.install.body": "DMT är redo att starta den privilegierade installationsfasen. Windows begär administratörsgodkännande en gång; därefter kan den upphöjda processen fortsätta utan fler UAC-frågor.",
+        "setup.install.uac.title": "Ett administratörsgodkännande",
+        "setup.install.uac.body": "Guiden körs utan upphöjda rättigheter. En separat process begär UAC först när installationen startar.",
+        "setup.install.status.ready": "Redo att begära administratörsgodkännande.",
+        "setup.install.status.requestingUac": "Väntar på Windows administratörsgodkännande…",
+        "setup.install.foundation.title": "Utvecklingsgrund",
+        "setup.install.foundation.body": "Den här versionen verifierar den upphöjda kanalen, installationsplanen och ägarskapet för DMT-resurser. Caddy, tjänster, certifikat, brandväggsregler eller filer installeras ännu inte.",
+        "setup.install.returnSummary": "Tillbaka till sammanfattningen",
+        "setup.install.progress.elevated": "Administratörsgodkännande mottaget.",
+        "setup.install.progress.validating": "Validerar installationsplanen…",
+        "setup.install.progress.manifest": "Förbereder manifestet för DMT-hanterade resurser…",
+        "setup.install.progress.foundationReady": "Installationsmotorns grund är klar.",
+        "setup.install.status.foundationComplete": "Grundtestet slutfördes utan fel. Inga systemändringar gjordes.",
+        "setup.install.error.launch": "Den upphöjda installationsprocessen kunde inte startas.",
+        "setup.install.uac.cancelled": "Administratörsgodkännandet avbröts. Inga systemändringar gjordes.",
+        "setup.install.error.cancelled": "Förberedelsen av installationen avbröts.",
+        "setup.install.error.communication": "Kommunikationen med den upphöjda installationsprocessen misslyckades.",
+        "setup.install.error.plan": "Installationsplanen är ogiltig eller kunde inte läsas.",
+        "setup.install.error.notElevated": "Installationsprocessen fick inte administratörsrättigheter."
     }
 }

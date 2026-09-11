@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private readonly PortInspectionService _portInspector = new();
     private readonly ListenerDetailService _listenerDetailService = new();
     private readonly NetworkInterfaceService _networkInterfaceService = new();
+    private readonly ElevatedInstallationService _elevatedInstallationService = new();
     private IReadOnlyList<ListeningEndpoint> _listeners = [];
     private IReadOnlyList<NetworkInterfaceInfo> _networkInterfaces = [];
     private readonly ObservableCollection<EndpointRow> _visibleListeners = new();
@@ -25,6 +26,8 @@ public partial class MainWindow : Window
     private bool _httpsVisible;
     private bool _adminVisible;
     private bool _summaryVisible;
+    private bool _installVisible;
+    private bool _installationRunning;
     private ListenerDetails? _selectedDetails;
     private bool _portSelectionInitialized;
 
@@ -76,11 +79,19 @@ public partial class MainWindow : Window
 
     private void Badge_Click(object sender, RoutedEventArgs e) => _localization.UnlockLanguage("tlh", select: true);
 
-    private void Begin_Click(object sender, RoutedEventArgs e)
+    private async void Begin_Click(object sender, RoutedEventArgs e)
     {
+        if (_installationRunning) return;
+
+        if (_installVisible)
+        {
+            ShowSummaryPanel();
+            return;
+        }
+
         if (_summaryVisible)
         {
-            NextStepOverlay.Visibility = Visibility.Visible;
+            await StartInstallationFoundationAsync();
             return;
         }
 
@@ -128,6 +139,8 @@ public partial class MainWindow : Window
         _httpsVisible = false;
         _adminVisible = false;
         _summaryVisible = false;
+        _installVisible = false;
+        InstallPanel.Visibility = Visibility.Collapsed;
         AdminPanel.Visibility = Visibility.Collapsed;
         SummaryPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Collapsed;
@@ -139,6 +152,7 @@ public partial class MainWindow : Window
         HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
         AdminNav.Background = System.Windows.Media.Brushes.Transparent;
         SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
+        InstallNav.Background = System.Windows.Media.Brushes.Transparent;
         NetworkNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
@@ -152,6 +166,8 @@ public partial class MainWindow : Window
         _httpsVisible = false;
         _adminVisible = false;
         _summaryVisible = false;
+        _installVisible = false;
+        InstallPanel.Visibility = Visibility.Collapsed;
         AdminPanel.Visibility = Visibility.Collapsed;
         SummaryPanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Collapsed;
@@ -163,6 +179,7 @@ public partial class MainWindow : Window
         HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
         AdminNav.Background = System.Windows.Media.Brushes.Transparent;
         SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
+        InstallNav.Background = System.Windows.Media.Brushes.Transparent;
         WelcomeNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Collapsed;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.welcome.begin]"));
@@ -170,6 +187,12 @@ public partial class MainWindow : Window
 
     private void Back_Click(object sender, RoutedEventArgs e)
     {
+        if (_installVisible && !_installationRunning)
+        {
+            ShowSummaryPanel();
+            return;
+        }
+
         if (_summaryVisible)
         {
             ShowAdminPanel();
@@ -204,6 +227,8 @@ public partial class MainWindow : Window
         _httpsVisible = false;
         _adminVisible = false;
         _summaryVisible = false;
+        _installVisible = false;
+        InstallPanel.Visibility = Visibility.Collapsed;
         AdminPanel.Visibility = Visibility.Collapsed;
         SummaryPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Collapsed;
@@ -217,6 +242,7 @@ public partial class MainWindow : Window
         HttpsNav.Background = System.Windows.Media.Brushes.Transparent;
         AdminNav.Background = System.Windows.Media.Brushes.Transparent;
         SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
+        InstallNav.Background = System.Windows.Media.Brushes.Transparent;
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
         LoadNetworkInterfaces();
@@ -231,6 +257,8 @@ public partial class MainWindow : Window
         _httpsVisible = true;
         _adminVisible = false;
         _summaryVisible = false;
+        _installVisible = false;
+        InstallPanel.Visibility = Visibility.Collapsed;
         AdminPanel.Visibility = Visibility.Collapsed;
         SummaryPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Collapsed;
@@ -243,6 +271,7 @@ public partial class MainWindow : Window
         AccessNav.Background = System.Windows.Media.Brushes.Transparent;
         AdminNav.Background = System.Windows.Media.Brushes.Transparent;
         SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
+        InstallNav.Background = System.Windows.Media.Brushes.Transparent;
         HttpsNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
@@ -257,6 +286,8 @@ public partial class MainWindow : Window
         _httpsVisible = false;
         _adminVisible = true;
         _summaryVisible = false;
+        _installVisible = false;
+        InstallPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = Visibility.Collapsed;
         NetworkPanel.Visibility = Visibility.Collapsed;
         AccessPanel.Visibility = Visibility.Collapsed;
@@ -264,7 +295,7 @@ public partial class MainWindow : Window
         SummaryPanel.Visibility = Visibility.Collapsed;
         AdminPanel.Visibility = Visibility.Visible;
         AdminNav.IsEnabled = true;
-        WelcomeNav.Background = NetworkNav.Background = AccessNav.Background = HttpsNav.Background = SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
+        WelcomeNav.Background = NetworkNav.Background = AccessNav.Background = HttpsNav.Background = SummaryNav.Background = InstallNav.Background = System.Windows.Media.Brushes.Transparent;
         AdminNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.network.continue]"));
@@ -279,15 +310,93 @@ public partial class MainWindow : Window
         _httpsVisible = false;
         _adminVisible = false;
         _summaryVisible = true;
+        _installVisible = false;
+        InstallPanel.Visibility = Visibility.Collapsed;
         WelcomePanel.Visibility = NetworkPanel.Visibility = AccessPanel.Visibility = HttpsPanel.Visibility = AdminPanel.Visibility = Visibility.Collapsed;
         SummaryPanel.Visibility = Visibility.Visible;
         SummaryNav.IsEnabled = true;
-        WelcomeNav.Background = NetworkNav.Background = AccessNav.Background = HttpsNav.Background = AdminNav.Background = System.Windows.Media.Brushes.Transparent;
+        WelcomeNav.Background = NetworkNav.Background = AccessNav.Background = HttpsNav.Background = AdminNav.Background = InstallNav.Background = System.Windows.Media.Brushes.Transparent;
         SummaryNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
         BackButton.Visibility = Visibility.Visible;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.summary.install]"));
         BeginButton.IsEnabled = true;
         RenderSummary();
+    }
+
+    private async Task StartInstallationFoundationAsync()
+    {
+        if (!int.TryParse(SelectedPortBox.Text.Trim(), out var httpsPort) || !ValidateAdminSelection())
+            return;
+
+        ShowInstallationPanel();
+        _installationRunning = true;
+        InstallProgressBar.Value = 5;
+        InstallStatusText.Text = _localization["setup.install.status.requestingUac"];
+        BeginButton.IsEnabled = false;
+        BackButton.Visibility = Visibility.Collapsed;
+
+        var selectedInterface = AccessInterfaceBox.SelectedItem as NetworkInterfaceInfo;
+        var plan = new InstallationPlan
+        {
+            HttpsPort = httpsPort,
+            AccessMode = AccessLocalRadio.IsChecked == true ? "local" : AccessLanRadio.IsChecked == true ? "lan" : "custom",
+            AccessAddress = AccessCustomRadio.IsChecked == true
+                ? selectedInterface?.IPv4Addresses.FirstOrDefault() ?? selectedInterface?.IPv6Addresses.FirstOrDefault()
+                : null,
+            HttpsMode = HttpsInternalRadio.IsChecked == true ? "internal" : "existing",
+            AdminUsername = AdminUsernameBox.Text.Trim(),
+            AdminDisplayName = string.IsNullOrWhiteSpace(AdminDisplayNameBox.Text) ? null : AdminDisplayNameBox.Text.Trim(),
+            AdminPassword = AdminPasswordBox.Password
+        };
+
+        var result = await _elevatedInstallationService.RunAsync(plan, progress =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                InstallProgressBar.Value = progress.Percent;
+                InstallStatusText.Text = _localization[progress.StatusKey];
+            });
+        });
+
+        _installationRunning = false;
+
+        if (result.Success)
+        {
+            InstallProgressBar.Value = 100;
+            InstallStatusText.Text = _localization["setup.install.status.foundationComplete"];
+            BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.install.returnSummary]"));
+            BeginButton.IsEnabled = true;
+            BackButton.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        InstallProgressBar.Value = 0;
+        InstallStatusText.Text = _localization[result.ErrorKey ?? "setup.install.error.communication"];
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.install.returnSummary]"));
+        BeginButton.IsEnabled = true;
+        BackButton.Visibility = Visibility.Collapsed;
+    }
+
+    private void ShowInstallationPanel()
+    {
+        _networkVisible = false;
+        _accessVisible = false;
+        _httpsVisible = false;
+        _adminVisible = false;
+        _summaryVisible = false;
+        _installVisible = true;
+
+        WelcomePanel.Visibility = NetworkPanel.Visibility = AccessPanel.Visibility = HttpsPanel.Visibility = AdminPanel.Visibility = SummaryPanel.Visibility = Visibility.Collapsed;
+        InstallPanel.Visibility = Visibility.Visible;
+        InstallNav.IsEnabled = true;
+
+        WelcomeNav.Background = NetworkNav.Background = AccessNav.Background = HttpsNav.Background = AdminNav.Background = SummaryNav.Background = System.Windows.Media.Brushes.Transparent;
+        InstallNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+
+        InstallProgressBar.Value = 0;
+        InstallStatusText.Text = _localization["setup.install.status.ready"];
+        BackButton.Visibility = Visibility.Collapsed;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.install.returnSummary]"));
     }
 
     private void AdminField_Changed(object sender, RoutedEventArgs e)
@@ -684,7 +793,6 @@ public partial class MainWindow : Window
         ExposureColumn.Header = _localization["setup.network.exposure"];
     }
 
-    private void PrototypeClose_Click(object sender, RoutedEventArgs e) => NextStepOverlay.Visibility = Visibility.Collapsed;
 
     private sealed class EndpointRow
     {

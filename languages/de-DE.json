@@ -149,6 +149,26 @@
         "setup.summary.recoveryValue": "Nur lokal, mit Windows-Administratorrechten",
         "setup.summary.customAccess": "Benutzerdefiniert — {0}",
         "setup.summary.adminWithName": "{0} — {1}",
-        "setup.summary.install": "Weiter zur Installation"
+        "setup.summary.install": "Weiter zur Installation",
+        "setup.install.title": "Installation",
+        "setup.install.body": "DMT ist bereit für die privilegierte Installationsphase. Windows fordert einmalig eine Administratorbestätigung an; danach kann der erhöhte Prozess die Installation ohne weitere UAC-Abfragen fortsetzen.",
+        "setup.install.uac.title": "Eine Administratorbestätigung",
+        "setup.install.uac.body": "Der Assistent bleibt ohne erhöhte Rechte. Ein separater Prozess fordert UAC erst beim Start der Installation an.",
+        "setup.install.status.ready": "Bereit, die Administratorbestätigung anzufordern.",
+        "setup.install.status.requestingUac": "Warten auf die Windows-Administratorbestätigung…",
+        "setup.install.foundation.title": "Entwicklungsgrundlage",
+        "setup.install.foundation.body": "Dieser Build prüft den erhöhten Kanal, den Installationsplan und die Eigentümerschaft der DMT-Ressourcen. Caddy, Dienste, Zertifikate, Firewallregeln oder Dateien werden noch nicht installiert.",
+        "setup.install.returnSummary": "Zurück zur Zusammenfassung",
+        "setup.install.progress.elevated": "Administratorbestätigung erhalten.",
+        "setup.install.progress.validating": "Installationsplan wird geprüft…",
+        "setup.install.progress.manifest": "Manifest der von DMT verwalteten Ressourcen wird vorbereitet…",
+        "setup.install.progress.foundationReady": "Die Grundlage des Installationsmoduls ist bereit.",
+        "setup.install.status.foundationComplete": "Grundlagentest erfolgreich abgeschlossen. Es wurden keine Systemänderungen vorgenommen.",
+        "setup.install.error.launch": "Der erhöhte Installationsprozess konnte nicht gestartet werden.",
+        "setup.install.uac.cancelled": "Administratorbestätigung abgebrochen. Es wurden keine Systemänderungen vorgenommen.",
+        "setup.install.error.cancelled": "Die Vorbereitung der Installation wurde abgebrochen.",
+        "setup.install.error.communication": "Die Kommunikation mit dem erhöhten Installationsprozess ist fehlgeschlagen.",
+        "setup.install.error.plan": "Der Installationsplan ist ungültig oder konnte nicht gelesen werden.",
+        "setup.install.error.notElevated": "Der Installationsprozess hat keine Administratorrechte erhalten."
     }
 }

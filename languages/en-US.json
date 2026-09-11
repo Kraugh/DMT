@@ -149,6 +149,26 @@
         "setup.summary.recoveryValue": "Local only, with Windows administrative privileges",
         "setup.summary.customAccess": "Custom — {0}",
         "setup.summary.adminWithName": "{0} — {1}",
-        "setup.summary.install": "Continue to installation"
+        "setup.summary.install": "Continue to installation",
+        "setup.install.title": "Installation",
+        "setup.install.body": "DMT is ready to start the privileged installation phase. Windows will ask for administrator authorization once; the elevated helper will then carry out the installation without further UAC prompts.",
+        "setup.install.uac.title": "One administrator authorization",
+        "setup.install.uac.body": "The setup wizard stays unelevated. A separate helper requests UAC only when installation begins.",
+        "setup.install.status.ready": "Ready to request administrator authorization.",
+        "setup.install.status.requestingUac": "Waiting for Windows administrator authorization…",
+        "setup.install.foundation.title": "Development foundation",
+        "setup.install.foundation.body": "This build validates the elevation channel, the installation plan and DMT resource ownership. It does not install Caddy, services, certificates, firewall rules or files yet.",
+        "setup.install.returnSummary": "Return to summary",
+        "setup.install.progress.elevated": "Administrator authorization received.",
+        "setup.install.progress.validating": "Validating the installation plan…",
+        "setup.install.progress.manifest": "Preparing the DMT-managed resource manifest…",
+        "setup.install.progress.foundationReady": "Installation engine foundation is ready.",
+        "setup.install.status.foundationComplete": "Foundation test completed successfully. No system changes were applied.",
+        "setup.install.error.launch": "The elevated installation helper could not be started.",
+        "setup.install.uac.cancelled": "Administrator authorization was cancelled. No system changes were applied.",
+        "setup.install.error.cancelled": "The installation foundation operation was cancelled.",
+        "setup.install.error.communication": "Communication with the elevated installation helper failed.",
+        "setup.install.error.plan": "The installation plan is invalid or could not be read.",
+        "setup.install.error.notElevated": "The installation helper did not receive administrator privileges."
     }
 }

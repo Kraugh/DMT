@@ -149,6 +149,26 @@
         "setup.summary.recoveryValue": "仅限本机，需要 Windows 管理员权限",
         "setup.summary.customAccess": "自定义 — {0}",
         "setup.summary.adminWithName": "{0} — {1}",
-        "setup.summary.install": "继续安装"
+        "setup.summary.install": "继续安装",
+        "setup.install.title": "安装",
+        "setup.install.body": "DMT 已准备开始需要管理员权限的安装阶段。Windows 只会请求一次管理员授权；随后提升权限的进程将继续安装，不再弹出 UAC 提示。",
+        "setup.install.uac.title": "仅一次管理员授权",
+        "setup.install.uac.body": "安装向导本身保持非提升权限。只有在开始安装时，独立进程才会请求 UAC。",
+        "setup.install.status.ready": "已准备请求管理员授权。",
+        "setup.install.status.requestingUac": "正在等待 Windows 管理员授权…",
+        "setup.install.foundation.title": "开发基础",
+        "setup.install.foundation.body": "此版本仅验证提升权限通信通道、安装计划以及 DMT 资源归属。当前不会安装 Caddy、服务、证书、防火墙规则或文件。",
+        "setup.install.returnSummary": "返回摘要",
+        "setup.install.progress.elevated": "已获得管理员授权。",
+        "setup.install.progress.validating": "正在验证安装计划…",
+        "setup.install.progress.manifest": "正在准备 DMT 管理资源清单…",
+        "setup.install.progress.foundationReady": "安装引擎基础已准备就绪。",
+        "setup.install.status.foundationComplete": "基础测试成功完成。未对系统进行任何更改。",
+        "setup.install.error.launch": "无法启动提升权限的安装进程。",
+        "setup.install.uac.cancelled": "管理员授权已取消。未对系统进行任何更改。",
+        "setup.install.error.cancelled": "安装准备操作已取消。",
+        "setup.install.error.communication": "与提升权限安装进程的通信失败。",
+        "setup.install.error.plan": "安装计划无效或无法读取。",
+        "setup.install.error.notElevated": "安装进程未获得管理员权限。"
     }
 }
