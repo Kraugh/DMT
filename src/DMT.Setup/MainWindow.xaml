@@ -455,6 +455,16 @@
                         </Border>
                     </Grid>
 
+                    <Grid x:Name="CompletePanel" Grid.Row="1" Margin="0,22,0,0" Visibility="Collapsed">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="620">
+                            <Border Width="72" Height="72" CornerRadius="36" Background="{StaticResource PowderBrush}" Margin="0,0,0,20">
+                                <TextBlock Text="✓" FontSize="34" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="{Binding [setup.complete.title]}" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding [setup.complete.body]}" FontSize="15" LineHeight="22" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0" />
+                        </StackPanel>
+                    </Grid>
+
                     <Grid Grid.Row="2" Margin="0,22,0,0">
                         <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">

@@ -156,8 +156,8 @@
         "setup.install.uac.body": "The setup wizard stays unelevated. A separate helper requests UAC only when installation begins.",
         "setup.install.status.ready": "Ready to request administrator authorization.",
         "setup.install.status.requestingUac": "Waiting for Windows administrator authorization…",
-        "setup.install.foundation.title": "Development foundation",
-        "setup.install.foundation.body": "This build validates the elevation channel, the installation plan and DMT resource ownership. It does not install Caddy, services, certificates, firewall rules or files yet.",
+        "setup.install.foundation.title": "Core installation",
+        "setup.install.foundation.body": "This tranche creates DMT's protected program/data structure and persists the installation configuration and resource manifest. Caddy, services, certificates and firewall rules are not installed yet.",
         "setup.install.returnSummary": "Return to summary",
         "setup.install.progress.elevated": "Administrator authorization received.",
         "setup.install.progress.validating": "Validating the installation plan…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "The installation foundation operation was cancelled.",
         "setup.install.error.communication": "Communication with the elevated installation helper failed.",
         "setup.install.error.plan": "The installation plan is invalid or could not be read.",
-        "setup.install.error.notElevated": "The installation helper did not receive administrator privileges."
+        "setup.install.error.notElevated": "The installation helper did not receive administrator privileges.",
+        "setup.install.progress.directories": "Creating DMT program and data directories…",
+        "setup.install.progress.configuration": "Writing DMT installation configuration…",
+        "setup.install.progress.coreReady": "DMT core installation completed.",
+        "setup.install.status.coreComplete": "Core installation completed successfully. DMT directories, configuration and resource manifest were created.",
+        "setup.complete.title": "Installation complete",
+        "setup.complete.body": "DMT core resources were installed successfully. Caddy, services, certificates and firewall configuration will be added in the next installation stages.",
+        "setup.complete.close": "Close"
     }
 }

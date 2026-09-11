@@ -156,8 +156,8 @@
         "setup.install.uac.body": "El asistente permanece sin elevar. Un proceso separado solicita UAC únicamente al comenzar la instalación.",
         "setup.install.status.ready": "Listo para solicitar autorización de administrador.",
         "setup.install.status.requestingUac": "Esperando la autorización de administrador de Windows…",
-        "setup.install.foundation.title": "Base de desarrollo",
-        "setup.install.foundation.body": "Esta compilación valida el canal elevado, el plan de instalación y la propiedad de los recursos de DMT. Todavía no instala Caddy, servicios, certificados, reglas de firewall ni archivos.",
+        "setup.install.foundation.title": "Instalación del núcleo",
+        "setup.install.foundation.body": "Esta fase crea la estructura protegida de programas y datos de DMT y guarda la configuración de instalación y el manifiesto de recursos. Caddy, servicios, certificados y reglas de firewall aún no se instalan.",
         "setup.install.returnSummary": "Volver al resumen",
         "setup.install.progress.elevated": "Autorización de administrador recibida.",
         "setup.install.progress.validating": "Validando el plan de instalación…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "La operación de preparación de la instalación fue cancelada.",
         "setup.install.error.communication": "Falló la comunicación con el proceso de instalación elevado.",
         "setup.install.error.plan": "El plan de instalación no es válido o no se pudo leer.",
-        "setup.install.error.notElevated": "El proceso de instalación no recibió privilegios de administrador."
+        "setup.install.error.notElevated": "El proceso de instalación no recibió privilegios de administrador.",
+        "setup.install.progress.directories": "Creando directorios de programas y datos de DMT…",
+        "setup.install.progress.configuration": "Guardando la configuración de instalación de DMT…",
+        "setup.install.progress.coreReady": "Instalación del núcleo de DMT completada.",
+        "setup.install.status.coreComplete": "Instalación del núcleo completada correctamente. Se crearon los directorios, la configuración y el manifiesto de recursos de DMT.",
+        "setup.complete.title": "Instalación completada",
+        "setup.complete.body": "Los recursos principales de DMT se instalaron correctamente. Caddy, los servicios, los certificados y la configuración del firewall se añadirán en las siguientes fases de instalación.",
+        "setup.complete.close": "Cerrar"
     }
 }

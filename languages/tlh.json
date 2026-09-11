@@ -156,8 +156,8 @@
         "setup.install.uac.body": "woQ Hutlh setup DevwI’. jom taghDI’ neH UAC tlhob mIw pIm.",
         "setup.install.status.ready": "loHwI’ chaw’ tlhoblu’meH SuH.",
         "setup.install.status.requestingUac": "Windows loHwI’ chaw’ loS…",
-        "setup.install.foundation.title": "chenmoHmeH Qoylu’bogh Doch",
-        "setup.install.foundation.body": "mIw woQ, jom nab, DMT Dochmey ghajwI’ je waH buildvam. wej Caddy, service, certificate, firewall chut, file je jom.",
+        "setup.install.foundation.title": "DMT botlh jom",
+        "setup.install.foundation.body": "DMT program De’ je Daqmey Qan chenmoH mIwvam; jom De’ resource tetlh je pol. wej Caddy, service, certificate, firewall chut je jom.",
         "setup.install.returnSummary": "De’ pojqa’Daq chegh",
         "setup.install.progress.elevated": "loHwI’ chaw’ Hevlu’.",
         "setup.install.progress.validating": "jom nab waH…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "jom nab Qu’ qIlta’.",
         "setup.install.error.communication": "jom mIw woQ rarlu’laHbe’.",
         "setup.install.error.plan": "jom nab qab pagh laDlu’laHbe’.",
-        "setup.install.error.notElevated": "jom mIwvaD loHwI’ DIb nobbe’lu’."
+        "setup.install.error.notElevated": "jom mIwvaD loHwI’ DIb nobbe’lu’.",
+        "setup.install.progress.directories": "DMT program De’ je Daqmey chenmoH…",
+        "setup.install.progress.configuration": "DMT jom De’ ghItlh…",
+        "setup.install.progress.coreReady": "DMT botlh jomta’.",
+        "setup.install.status.coreComplete": "DMT botlh jom Qapta’. Daqmey, jom De’, resource tetlh je chenmoHlu’.",
+        "setup.complete.title": "jomta’",
+        "setup.complete.body": "DMT botlh Dochmey jomlu’ta’. Caddy, service, certificate, firewall De’ je jom mIw vebDaq chellu’.",
+        "setup.complete.close": "SoQ"
     }
 }

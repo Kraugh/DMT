@@ -156,8 +156,8 @@
         "setup.install.uac.body": "Der Assistent bleibt ohne erhöhte Rechte. Ein separater Prozess fordert UAC erst beim Start der Installation an.",
         "setup.install.status.ready": "Bereit, die Administratorbestätigung anzufordern.",
         "setup.install.status.requestingUac": "Warten auf die Windows-Administratorbestätigung…",
-        "setup.install.foundation.title": "Entwicklungsgrundlage",
-        "setup.install.foundation.body": "Dieser Build prüft den erhöhten Kanal, den Installationsplan und die Eigentümerschaft der DMT-Ressourcen. Caddy, Dienste, Zertifikate, Firewallregeln oder Dateien werden noch nicht installiert.",
+        "setup.install.foundation.title": "Core-Installation",
+        "setup.install.foundation.body": "Diese Tranche erstellt die geschützte Programm- und Datenstruktur von DMT und speichert Installationskonfiguration und Ressourcenmanifest. Caddy, Dienste, Zertifikate und Firewallregeln werden noch nicht installiert.",
         "setup.install.returnSummary": "Zurück zur Zusammenfassung",
         "setup.install.progress.elevated": "Administratorbestätigung erhalten.",
         "setup.install.progress.validating": "Installationsplan wird geprüft…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "Die Vorbereitung der Installation wurde abgebrochen.",
         "setup.install.error.communication": "Die Kommunikation mit dem erhöhten Installationsprozess ist fehlgeschlagen.",
         "setup.install.error.plan": "Der Installationsplan ist ungültig oder konnte nicht gelesen werden.",
-        "setup.install.error.notElevated": "Der Installationsprozess hat keine Administratorrechte erhalten."
+        "setup.install.error.notElevated": "Der Installationsprozess hat keine Administratorrechte erhalten.",
+        "setup.install.progress.directories": "DMT-Programm- und Datenverzeichnisse werden erstellt…",
+        "setup.install.progress.configuration": "DMT-Installationskonfiguration wird geschrieben…",
+        "setup.install.progress.coreReady": "DMT-Core-Installation abgeschlossen.",
+        "setup.install.status.coreComplete": "Core-Installation erfolgreich abgeschlossen. DMT-Verzeichnisse, Konfiguration und Ressourcenmanifest wurden erstellt.",
+        "setup.complete.title": "Installation abgeschlossen",
+        "setup.complete.body": "Die DMT-Core-Ressourcen wurden erfolgreich installiert. Caddy, Dienste, Zertifikate und Firewallkonfiguration werden in den nächsten Installationsphasen ergänzt.",
+        "setup.complete.close": "Schließen"
     }
 }

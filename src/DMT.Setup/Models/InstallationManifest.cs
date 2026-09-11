@@ -13,12 +13,12 @@ public sealed class ManagedResourceRecord
     public string Identifier { get; init; } = string.Empty;
     public bool CreatedByDmt { get; init; }
     public bool ManagedByDmt { get; init; }
-    public ManagedResourceRemovalPolicy RemovalPolicy { get; init; } = ManagedResourceRemovalPolicy.RemoveWithDmt;
+    public ManagedResourceRemovalPolicy RemovalPolicy { get; init; } = ManagedResourceRemovalPolicy.Remove;
 }
 
 public enum ManagedResourceRemovalPolicy
 {
-    RemoveWithDmt,
+    Remove,
     AskDefaultRemove,
     Preserve
 }

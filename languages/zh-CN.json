@@ -156,8 +156,8 @@
         "setup.install.uac.body": "安装向导本身保持非提升权限。只有在开始安装时，独立进程才会请求 UAC。",
         "setup.install.status.ready": "已准备请求管理员授权。",
         "setup.install.status.requestingUac": "正在等待 Windows 管理员授权…",
-        "setup.install.foundation.title": "开发基础",
-        "setup.install.foundation.body": "此版本仅验证提升权限通信通道、安装计划以及 DMT 资源归属。当前不会安装 Caddy、服务、证书、防火墙规则或文件。",
+        "setup.install.foundation.title": "核心安装",
+        "setup.install.foundation.body": "此阶段将创建 DMT 受保护的程序和数据目录结构，并保存安装配置与资源清单。暂不安装 Caddy、服务、证书或防火墙规则。",
         "setup.install.returnSummary": "返回摘要",
         "setup.install.progress.elevated": "已获得管理员授权。",
         "setup.install.progress.validating": "正在验证安装计划…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "安装准备操作已取消。",
         "setup.install.error.communication": "与提升权限安装进程的通信失败。",
         "setup.install.error.plan": "安装计划无效或无法读取。",
-        "setup.install.error.notElevated": "安装进程未获得管理员权限。"
+        "setup.install.error.notElevated": "安装进程未获得管理员权限。",
+        "setup.install.progress.directories": "正在创建 DMT 程序和数据目录…",
+        "setup.install.progress.configuration": "正在写入 DMT 安装配置…",
+        "setup.install.progress.coreReady": "DMT 核心安装已完成。",
+        "setup.install.status.coreComplete": "核心安装成功完成。已创建 DMT 目录、配置和资源清单。",
+        "setup.complete.title": "安装完成",
+        "setup.complete.body": "DMT 核心资源已成功安装。Caddy、服务、证书和防火墙配置将在后续安装阶段中添加。",
+        "setup.complete.close": "关闭"
     }
 }

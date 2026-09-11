@@ -28,6 +28,7 @@ public partial class MainWindow : Window
     private bool _summaryVisible;
     private bool _installVisible;
     private bool _installationRunning;
+    private bool _completeVisible;
     private ListenerDetails? _selectedDetails;
     private bool _portSelectionInitialized;
 
@@ -82,6 +83,12 @@ public partial class MainWindow : Window
     private async void Begin_Click(object sender, RoutedEventArgs e)
     {
         if (_installationRunning) return;
+
+        if (_completeVisible)
+        {
+            Close();
+            return;
+        }
 
         if (_installVisible)
         {
@@ -363,10 +370,8 @@ public partial class MainWindow : Window
         if (result.Success)
         {
             InstallProgressBar.Value = 100;
-            InstallStatusText.Text = _localization["setup.install.status.foundationComplete"];
-            BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.install.returnSummary]"));
-            BeginButton.IsEnabled = true;
-            BackButton.Visibility = Visibility.Collapsed;
+            InstallStatusText.Text = _localization["setup.install.status.coreComplete"];
+            ShowCompletePanel();
             return;
         }
 
@@ -385,6 +390,8 @@ public partial class MainWindow : Window
         _adminVisible = false;
         _summaryVisible = false;
         _installVisible = true;
+        _completeVisible = false;
+        CompletePanel.Visibility = Visibility.Collapsed;
 
         WelcomePanel.Visibility = NetworkPanel.Visibility = AccessPanel.Visibility = HttpsPanel.Visibility = AdminPanel.Visibility = SummaryPanel.Visibility = Visibility.Collapsed;
         InstallPanel.Visibility = Visibility.Visible;
@@ -397,6 +404,20 @@ public partial class MainWindow : Window
         InstallStatusText.Text = _localization["setup.install.status.ready"];
         BackButton.Visibility = Visibility.Collapsed;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.install.returnSummary]"));
+    }
+
+    private void ShowCompletePanel()
+    {
+        _installVisible = false;
+        _completeVisible = true;
+        InstallPanel.Visibility = Visibility.Collapsed;
+        CompletePanel.Visibility = Visibility.Visible;
+        CompleteNav.IsEnabled = true;
+        InstallNav.Background = System.Windows.Media.Brushes.Transparent;
+        CompleteNav.Background = (System.Windows.Media.Brush)FindResource("PeachBrush");
+        BackButton.Visibility = Visibility.Collapsed;
+        BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.complete.close]"));
+        BeginButton.IsEnabled = true;
     }
 
     private void AdminField_Changed(object sender, RoutedEventArgs e)

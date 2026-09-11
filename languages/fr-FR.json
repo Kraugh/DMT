@@ -156,8 +156,8 @@
         "setup.install.uac.body": "L’assistant reste non élevé. Un processus séparé demande l’UAC uniquement au démarrage de l’installation.",
         "setup.install.status.ready": "Prêt à demander l’autorisation administrateur.",
         "setup.install.status.requestingUac": "En attente de l’autorisation administrateur Windows…",
-        "setup.install.foundation.title": "Fondation de développement",
-        "setup.install.foundation.body": "Cette version vérifie le canal élevé, le plan d’installation et la propriété des ressources DMT. Elle n’installe pas encore Caddy, les services, certificats, règles de pare-feu ou fichiers.",
+        "setup.install.foundation.title": "Installation du cœur",
+        "setup.install.foundation.body": "Cette étape crée la structure protégée des programmes et données DMT et enregistre la configuration d’installation et le manifeste des ressources. Caddy, les services, certificats et règles de pare-feu ne sont pas encore installés.",
         "setup.install.returnSummary": "Retour au récapitulatif",
         "setup.install.progress.elevated": "Autorisation administrateur reçue.",
         "setup.install.progress.validating": "Validation du plan d’installation…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "L’opération de préparation de l’installation a été annulée.",
         "setup.install.error.communication": "La communication avec le processus d’installation élevé a échoué.",
         "setup.install.error.plan": "Le plan d’installation est invalide ou illisible.",
-        "setup.install.error.notElevated": "Le processus d’installation n’a pas reçu les privilèges administrateur."
+        "setup.install.error.notElevated": "Le processus d’installation n’a pas reçu les privilèges administrateur.",
+        "setup.install.progress.directories": "Création des répertoires de programmes et de données DMT…",
+        "setup.install.progress.configuration": "Écriture de la configuration d’installation DMT…",
+        "setup.install.progress.coreReady": "Installation du cœur DMT terminée.",
+        "setup.install.status.coreComplete": "Installation du cœur terminée avec succès. Les répertoires, la configuration et le manifeste des ressources DMT ont été créés.",
+        "setup.complete.title": "Installation terminée",
+        "setup.complete.body": "Les ressources principales de DMT ont été installées avec succès. Caddy, les services, les certificats et la configuration du pare-feu seront ajoutés lors des prochaines étapes.",
+        "setup.complete.close": "Fermer"
     }
 }

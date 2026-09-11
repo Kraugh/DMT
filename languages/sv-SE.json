@@ -156,8 +156,8 @@
         "setup.install.uac.body": "Guiden körs utan upphöjda rättigheter. En separat process begär UAC först när installationen startar.",
         "setup.install.status.ready": "Redo att begära administratörsgodkännande.",
         "setup.install.status.requestingUac": "Väntar på Windows administratörsgodkännande…",
-        "setup.install.foundation.title": "Utvecklingsgrund",
-        "setup.install.foundation.body": "Den här versionen verifierar den upphöjda kanalen, installationsplanen och ägarskapet för DMT-resurser. Caddy, tjänster, certifikat, brandväggsregler eller filer installeras ännu inte.",
+        "setup.install.foundation.title": "Kärninstallation",
+        "setup.install.foundation.body": "Det här steget skapar DMT:s skyddade program- och datastruktur och sparar installationskonfigurationen och resursmanifestet. Caddy, tjänster, certifikat och brandväggsregler installeras inte ännu.",
         "setup.install.returnSummary": "Tillbaka till sammanfattningen",
         "setup.install.progress.elevated": "Administratörsgodkännande mottaget.",
         "setup.install.progress.validating": "Validerar installationsplanen…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "Förberedelsen av installationen avbröts.",
         "setup.install.error.communication": "Kommunikationen med den upphöjda installationsprocessen misslyckades.",
         "setup.install.error.plan": "Installationsplanen är ogiltig eller kunde inte läsas.",
-        "setup.install.error.notElevated": "Installationsprocessen fick inte administratörsrättigheter."
+        "setup.install.error.notElevated": "Installationsprocessen fick inte administratörsrättigheter.",
+        "setup.install.progress.directories": "Skapar DMT:s program- och datakataloger…",
+        "setup.install.progress.configuration": "Skriver DMT:s installationskonfiguration…",
+        "setup.install.progress.coreReady": "DMT:s kärninstallation är klar.",
+        "setup.install.status.coreComplete": "Kärninstallationen slutfördes. DMT-kataloger, konfiguration och resursmanifest skapades.",
+        "setup.complete.title": "Installationen är klar",
+        "setup.complete.body": "DMT:s kärnresurser installerades. Caddy, tjänster, certifikat och brandväggskonfiguration läggs till i kommande installationssteg.",
+        "setup.complete.close": "Stäng"
     }
 }

@@ -156,8 +156,8 @@
         "setup.install.uac.body": "セットアップウィザード自体は昇格しません。インストール開始時だけ、別プロセスが UAC を要求します。",
         "setup.install.status.ready": "管理者承認を要求する準備ができました。",
         "setup.install.status.requestingUac": "Windows の管理者承認を待っています…",
-        "setup.install.foundation.title": "開発基盤",
-        "setup.install.foundation.body": "このビルドでは、昇格通信、インストール計画、DMT リソースの所有管理を検証します。Caddy、サービス、証明書、ファイアウォール規則、ファイルはまだインストールしません。",
+        "setup.install.foundation.title": "コアインストール",
+        "setup.install.foundation.body": "この段階では、DMT の保護されたプログラム／データ構造を作成し、インストール設定とリソースマニフェストを保存します。Caddy、サービス、証明書、ファイアウォール規則はまだインストールしません。",
         "setup.install.returnSummary": "概要に戻る",
         "setup.install.progress.elevated": "管理者承認を受け取りました。",
         "setup.install.progress.validating": "インストール計画を検証しています…",
@@ -169,6 +169,13 @@
         "setup.install.error.cancelled": "インストール準備処理がキャンセルされました。",
         "setup.install.error.communication": "昇格インストールプロセスとの通信に失敗しました。",
         "setup.install.error.plan": "インストール計画が無効か、読み取れません。",
-        "setup.install.error.notElevated": "インストールプロセスに管理者権限が付与されませんでした。"
+        "setup.install.error.notElevated": "インストールプロセスに管理者権限が付与されませんでした。",
+        "setup.install.progress.directories": "DMT のプログラム／データディレクトリを作成しています…",
+        "setup.install.progress.configuration": "DMT のインストール設定を書き込んでいます…",
+        "setup.install.progress.coreReady": "DMT コアのインストールが完了しました。",
+        "setup.install.status.coreComplete": "コアインストールが正常に完了しました。DMT のディレクトリ、設定、リソースマニフェストを作成しました。",
+        "setup.complete.title": "インストール完了",
+        "setup.complete.body": "DMT のコアリソースを正常にインストールしました。Caddy、サービス、証明書、ファイアウォール設定は今後のインストール段階で追加されます。",
+        "setup.complete.close": "閉じる"
     }
 }
