@@ -12,4 +12,6 @@ public sealed class InstallationPlan
     // The password is transferred only through the private named pipe to the elevated helper.
     // It is deliberately excluded from manifests and logs.
     public string AdminPassword { get; init; } = string.Empty;
+    public string SourceDirectory { get; init; } = string.Empty;
+    public string? MigrationDatabase { get; init; }
 }

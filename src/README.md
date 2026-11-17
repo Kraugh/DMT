@@ -1,6 +1,7 @@
 # Source
 
-- `DMT.Setup/` — first WPF installer bootstrap (`net10.0-windows`).
-- Future application projects will be added only when their vertical slice is implemented.
+- `DMT.Setup/` — WPF installer and elevated local service/acquisition manager (`net10.0-windows`). First physical-PC pilot blocked.
+- `DMT.Inventory/` — SQLite imports, current/history queries, exports and verified share archiving.
+- `DMT.Web/` — dashboard/API, explicit acquisition CLI, installed-mode authentication and owned Caddy process (`net10.0`).
 
-The repository currently contains source for the graphical setup welcome screen and dynamic JSON localisation.
+See [recovery](../docs/RECOVERY.md), [status](../docs/STATUS.md) and [development usage](../docs/INVENTORY-DEVELOPMENT.md). No MT checkout or company reports are needed to build/test DMT.

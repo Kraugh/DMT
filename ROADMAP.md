@@ -2,6 +2,37 @@
 
 This roadmap records the current direction of **DMT — Dashboard Maintenance Toolkit**. It is intentionally practical and may evolve as real deployments and performance tests provide evidence.
 
+## Recovery checkpoint — 2026-11-17
+
+Tracking: [ingestion #1](https://github.com/Kraugh/DMT/issues/1), [blocked physical installer #2](https://github.com/Kraugh/DMT/issues/2).
+
+See [current implementation and handoff](docs/STATUS.md) and [clean-PC recovery](docs/RECOVERY.md). This section is the current operational status; older phase checklists below also include broader product requirements.
+
+### Implemented and retained in source
+
+- [x] Incremental SQLite imports, UUID/serial identity, snapshot conflicts, raw bytes/hash and collection/import history.
+- [x] Latest-snapshot computer/OS/software dashboard, product grouping, reverse search, maintenance review and TXT/CSV exports.
+- [x] Verified share archiving, monthly ZIP manifests/catch-up, conflict quarantine and evidence-bound optional pruning.
+- [x] WPF service-management/acquisition panel and self-contained installer build.
+- [x] Installed-mode local administrator authentication, Caddy HTTPS and owned-child shutdown integration tests.
+- [x] Synthetic inventory, setup/runtime, report-text, localization and mocked GPO test harnesses.
+- [x] Recovery documentation distinguishing implemented code from real deployment acceptance.
+
+### Open — preserve before any further pilot
+
+- [ ] **BLOCKER: diagnose the physical installer stall** at directory creation (~35%, approximately one hour); preserve partial state, verify package/footer version, inspect IPC/WPF/ACL hypotheses, add durable phase diagnostics, bounded operations and recovery.
+- [ ] Complete physical UAC/SCM/LocalService ACL/HTTPS-trust/start/restart/stop/migration/acquisition acceptance; do not label the installer stable before this passes.
+- [ ] Implement safe upgrade/uninstall, interrupted-install recovery, code signing and repeatable stable-release packaging.
+- [ ] Add configurable scheduled import and service/share identity design; archive catch-up is not scheduled acquisition.
+- [ ] Reduce archive verification latency with measured safe caching and visible progress/cancellation.
+- [ ] Design bounded source-ZIP intake and diagnosis of same-snapshot payload changes during collection.
+- [ ] Deliver as-of-date fleet comparisons, freshness/retirement semantics and software-change timelines; retained history alone is insufficient.
+- [ ] Add consistent private backup/restore/rebuild with a verified recovery drill and retention policy.
+- [ ] Add trustworthy manufacturer BIOS/GPU applicability checks. Agent enrollment/job transport/update execution remain unimplemented; no remote update is executed from report strings.
+- [ ] Add encryption views with explicit unknown/partial evidence; `encrypted` is not a complete BitLocker result.
+- [ ] Add multi-user/read-only roles, LAN/certificate support, tenant administration and authorization review.
+- [ ] Review new translations beyond Italian/English, accessibility, UI/version presentation and GPO deployment acceptance.
+
 ## Phase 0 — Project foundation
 
 - [x] Define DMT scope and separation from Maintenance Toolkit.
@@ -20,7 +51,7 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 
 ### Authentication and UI
 
-- [ ] Responsive login page.
+- [x] Responsive login page.
 - [ ] Admin and read-only user roles.
 - [ ] Language selector available from login onward.
 - [ ] Persist user language preference.
@@ -29,21 +60,21 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 
 ### Internationalisation
 
-- [ ] Runtime discovery of JSON files in `languages/`.
+- [x] Runtime discovery of JSON files in `languages/`.
 - [ ] No localisable UI string hardcoded in application source.
-- [ ] `en-US` canonical fallback.
+- [x] `en-US` canonical fallback.
 - [x] Initial `it-IT`, `en-US`, `de-DE`, `fr-FR`, `es-ES`, `ja-JP`, `zh-CN`, `sv-SE` packs.
 - [x] Hidden key-complete `tlh` pack architecture for the Klingon easter egg.
-- [ ] Missing-key fallback to English.
+- [x] Missing-key fallback to English.
 - [ ] Missing-key logging and visible development marker.
 - [ ] Locale-aware dates, times, numbers and pluralisation.
 
 ### Storage
 
-- [ ] SQLite database for the initial deployment.
-- [ ] WAL mode and appropriate indexes.
-- [ ] Schema migrations from the beginning.
-- [ ] Preserve raw imported snapshots outside/alongside relational data.
+- [x] SQLite persistence and installer migration code (physical installation acceptance blocked).
+- [x] WAL mode and appropriate indexes.
+- [x] Schema migrations from the beginning.
+- [x] Preserve raw imported snapshots alongside relational data as exact-byte BLOBs.
 
 ### Ingestion
 
@@ -52,36 +83,38 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 - [ ] Optional default department/status per source.
 - [ ] Default automatic polling every 30 minutes.
 - [ ] Administrator-configurable polling interval.
-- [ ] **Import new data now** manual action.
-- [ ] Ignore `.tmp` files.
-- [ ] Validate JSON schema version.
-- [ ] Deduplicate by immutable `snapshotId`.
-- [ ] Transactional import.
-- [ ] Move successfully committed files to `processed/`.
-- [ ] Move malformed/unimportable files to `rejected/` with reason logging.
-- [ ] Preserve processed raw JSON rather than deleting it.
+- [x] **Import new data now** manual action.
+- [x] Ignore `.tmp` files.
+- [x] Validate JSON schema version.
+- [x] Deduplicate by immutable `snapshotId`.
+- [x] Transactional import.
+- [x] Keep source read-only; archive successfully imported bytes transactionally in SQLite (supersedes planned moves to `processed/`, ADR 0001).
+- [x] Report malformed/unimportable files with reason codes without moving originals (supersedes planned `rejected/` moves).
+- [x] Preserve accepted raw JSON rather than deleting it.
 
 ### Assets
 
-- [ ] Auto-create a minimal asset from reliable inventory data.
-- [ ] Durable internal Asset ID independent from hostname.
-- [ ] Recognition using multiple technical identifiers.
-- [ ] Current inventory view.
-- [ ] Snapshot history.
+- [x] Auto-create a minimal asset from reliable inventory data.
+- [x] Durable internal Asset ID independent from hostname.
+- [x] Recognition using multiple technical identifiers.
+- [x] Current inventory view.
+- [x] Snapshot history.
 - [ ] Detect technical changes between snapshots.
 - [ ] Preserve administrative metadata across technical changes.
 
 ### Dashboard and search
 
-- [ ] Asset list.
-- [ ] Asset detail page.
-- [ ] Software inventory.
+- [x] Asset list.
+- [x] Asset detail page.
+- [x] Software inventory.
 - [ ] Global search.
 - [ ] Filters for OS, software, RAM, firmware and last check-in.
 - [ ] Import status and last/next import indicators.
-- [ ] Import result summary: found/imported/duplicate/rejected/duration.
+- [x] Import result summary: found/imported/duplicate/rejected/duration.
 
 ## Phase 2 — Asset lifecycle
+
+Development evidence for the first importer/dashboard/API slice is recorded in [INVENTORY-DEVELOPMENT.md](docs/INVENTORY-DEVELOPMENT.md). CLI import, localized browser inventory, OS/software/history queries and filtered CSV exist; the broader ingestion issue, multi-user authorization, scheduling and physical deployment acceptance remain incomplete.
 
 - [ ] Sites and departments as independent dimensions.
 - [ ] People separate from DMT login users.
@@ -101,7 +134,7 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 ## Phase 3 — Inventory intelligence
 
 - [ ] Queries for unsupported/old Windows versions.
-- [ ] Software/version fleet search.
+- [x] Software/version fleet search.
 - [ ] Firmware/version fleet search.
 - [ ] RAM/storage capacity filters.
 - [ ] Last-seen ageing thresholds.

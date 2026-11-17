@@ -2,6 +2,8 @@
 
 ## Product boundary
 
+See [STATUS.md](STATUS.md) and [RECOVERY.md](RECOVERY.md) for the implemented checkpoint and open installer incident. Proposals below do not imply that polling, lifecycle administration or successful installation are complete. ADRs 0003/0004 define opt-in verified source archiving; ordinary import remains read-only.
+
 DMT consumes versioned technical snapshots. Maintenance Toolkit remains an independent maintenance tool and snapshot producer. DMT never relies on MT internal implementation details.
 
 ## Durable identity
@@ -30,6 +32,8 @@ ingestion_sources
 ```
 
 ## Processing flow
+
+The diagram below records the original proposal. For the implemented 2026-10-14 slice, [ADR 0001](decisions/0001-incremental-inventory.md) supersedes file moves: the source stays read-only; exact JSON bytes are committed inside SQLite and rejected files are reported in import history. No `processed/` or `rejected/` directory is created on the source.
 
 ```text
 MT writes .tmp

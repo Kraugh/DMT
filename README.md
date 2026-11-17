@@ -6,8 +6,14 @@
 
 **DMT** is an open-source responsive dashboard that turns versioned technical inventory snapshots produced by [Maintenance Toolkit](https://www.kraugh.it/software/maintenance-toolkit/) into a searchable, historical and administrator-friendly asset inventory.
 
-**Project status:** 0.1 development bootstrap.  
+**Project status:** 0.2 development checkpoint (2026-11-17). Inventory and archiving work; physical-PC installation is blocked.
 Project page: **https://www.kraugh.it/software/dmt/**
+
+## Recover, verify and download
+
+Source, WPF setup, web UI, languages, branding, design decisions, deployment helpers and synthetic tests are in this repository. Start with [clean-PC recovery](docs/RECOVERY.md), [current status and unfinished work](docs/STATUS.md) and [roadmap](ROADMAP.md). Company reports, databases, credentials and runtime configuration are excluded.
+
+Download source through **Code > Download ZIP** or choose a checkpoint in [Releases](https://github.com/Kraugh/DMT/releases). The Windows workflow also builds a self-contained diagnostic installer artifact. The installer is **not production-ready**: its first physical-PC pilot stalled at directory creation. Read STATUS.md before trying it.
 
 ## What DMT is for
 
@@ -42,6 +48,10 @@ The official Kraugh open-source build is intended to manage up to **10 active as
 - durable asset identity independent of hostname/user/Windows installation
 
 See [`docs/DMT-0.1-BASELINE.md`](docs/DMT-0.1-BASELINE.md).
+
+The first incremental SQLite inventory slice provides an explicit read-only folder import and a localized localhost dashboard/API for OS/software queries, history and CSV. See [development usage and verified limits](docs/INVENTORY-DEVELOPMENT.md). Installed-mode local-admin authentication and deployment code exist; successful physical-PC installation, multi-user roles and LAN access remain pending.
+
+A [read-only archive simulation](docs/ARCHIVE-SIMULATION.md) plans verified transfers into `archiviati` and monthly `yyyyMM-MTREPORT.zip` files. The separate [authorized live workflow](docs/ARCHIVE-LIVE.md) supports verified transfers, monthly compression and opt-in first-use catch-up; default startup enables no archive writes.
 
 ## Setup experience
 
@@ -89,7 +99,9 @@ DMT/
 ├── docs/
 ├── languages/
 ├── src/
-│   └── DMT.Setup/
+│   ├── DMT.Setup/
+│   ├── DMT.Inventory/
+│   └── DMT.Web/
 ├── tests/
 ├── DMT.sln
 ├── LICENSE

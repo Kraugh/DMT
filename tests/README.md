@@ -1,3 +1,21 @@
 # Tests
 
-Test suite placeholder. Internationalisation tests should verify language-pack key alignment and English fallback behaviour from the first implementation milestone.
+Run `dotnet run --project tests/DMT.Inventory.Tests` for synthetic SQLite/import tests. The harness uses a unique temporary directory, prints its exact path and removes it after verification. It covers deduplication/conflicting payloads, tenant/site isolation, identity conflict rollback, timestamp ordering, raw byte preservation, invalid input, read-only source handling and current/history software semantics.
+
+Run `python tests/validate-language-packs.py` for key parity across all nine packs. No company reports are included in tests.
+
+Run `pwsh -NoProfile -File tests/Test-CiscoVpnRemoval.ps1` for 16 synthetic assertions on the Cisco VPN-only removal helper (including Secure Client 5.x): exact product selection, other Cisco modules excluded, publisher/ProductCode validation, fixed MSI no-reboot arguments, simulation, successful removal verification, failures, pending restart and an active-VPN block. Installer/registry/elevation boundaries are mocked; no real product is removed.
+
+Run `node tests/report-text.test.cjs` for 19 display-encoding assertions: Windows-1252/UTF-8 mojibake, mixed correct/corrupt text, double encoding, preservation of the original string, multilingual text, literal HTML-like input and idempotence. This helper changes display text only, not stored reports or API data.
+
+The combined acquisition workflow adds seven assertions for verified transfer, conflicts left at source, saved run evidence, incremental retry and exclusion of a second acquisition on the same database. The inventory executable now contains 133 assertions. See [service management](../docs/SERVICE-MANAGEMENT.md) for the current WPF/SCM deployment boundary.
+
+Run `pwsh -NoProfile -File tests/Test-Pdf24Cleanup.ps1` for 25 synthetic assertions on the standalone GPO helper: numeric version selection, current/newer preservation, supported MSI/Inno commands, signature/path rejection, simulation with no mutations, cleanup/install versus repair, pending restart, restoration after uninstall failure and preflight failure. Native installer calls, registry inventory, COM and elevation are mocked. A Windows PowerShell 5.1 syntax check passes; executing tests under that host remains blocked by the local execution policy. See [deployment instructions](../scripts/gpo/README.it.md). No real installer is executed by this test.
+
+Archive planner checks additionally cover read-only planning, tenant-scoped acquired evidence, source/database/destination conflicts, matching staged copies, existing ZIPs, month-end catch-up, Rome timezone/DST, ignored temporary files and missing/unsafe paths. The synthetic files are removed by the same harness cleanup.
+
+Live archive checks cover native locked-handle retirement, exact copied bytes and timestamps, interruption/retry, changed sources, new arrivals excluded from the allowlist, locked files, destination collisions and path escape rejection. ZIP checks cover closed/current months, manifest and byte-exact recovery, actual compression, late-arrival updates retaining the previous ZIP, duplicate loose-file recovery, corrupt ZIP preservation and temporary cleanup.
+
+Maintenance review checks cover explicit BIOS/GPU candidates, missing and current data, pending restarts, deferred work, generic fallback, preservation of raw error text, unavailable remote execution and current-snapshot/tenant isolation. Software export checks cover computer deduplication, multiple versions, CSV escaping/formula protection, missing versions, empty results, line injection and more than one page. These checks are included in the inventory harness above.
+
+Run `dotnet run --project tests/DMT.Setup.Tests -- <DMT.Web.dll-or-exe> <caddy.exe>` for 18 synthetic installer/runtime assertions: credential hashing, payload containment, HTTPS with a private test CA, required login and CSRF, secure authentication cookies, logout and termination of the owned Caddy process when its parent exits. The published self-contained web executable is supported. This does not install a Windows service or trust a certificate on the machine; SCM, ACLs and UAC require the first physical-PC installation check.

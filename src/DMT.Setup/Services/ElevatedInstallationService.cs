@@ -53,7 +53,9 @@ public sealed class ElevatedInstallationService
 
         try
         {
-            await pipe.WaitForConnectionAsync(cancellationToken);
+            using var connectTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            connectTimeout.CancelAfter(TimeSpan.FromSeconds(60));
+            await pipe.WaitForConnectionAsync(connectTimeout.Token);
 
             using var reader = new StreamReader(pipe, leaveOpen: true);
             using var writer = new StreamWriter(pipe, leaveOpen: true) { AutoFlush = true };

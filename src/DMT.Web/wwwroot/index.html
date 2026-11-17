@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DMT</title><link rel="stylesheet" href="/app.css"><script src="/report-text.js" defer></script><script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><img src="/logo.png" alt=""><strong>DMT</strong></div>
+    <p class="brand-caption" data-i18n="app.subtitle"></p>
+    <nav><button id="nav-computers" class="nav active" data-i18n="web.computers"></button><button id="nav-software" class="nav" data-i18n="nav.software"></button></nav>
+    <div class="sidebar-footer"><span class="local-dot"></span><span data-i18n="web.localPreview"></span><button id="badge" class="badge" data-i18n-title="web.badge" aria-label="DMT">✦</button></div>
+  </aside>
+  <main>
+    <header><div><p class="eyebrow" data-i18n="app.subtitle"></p><h1 data-i18n="web.title"></h1></div><div class="header-actions"><label class="language-label"><span data-i18n="web.language"></span><select id="language"></select></label><button id="refresh" class="button" data-i18n="web.refresh"></button></div></header>
+    <p class="intro" data-i18n="web.intro"></p>
+    <button id="logout" class="button" hidden data-i18n="auth.logout"></button>
+    <section class="metrics" aria-label="DMT"><div class="metric"><span data-i18n="web.computers"></span><strong id="computer-count">—</strong></div><div class="metric"><span data-i18n="web.products"></span><strong id="product-count">—</strong></div><button type="button" id="maintenance-card" class="metric attention" aria-pressed="false"><span data-i18n="web.maintenanceReview"></span><strong id="attention-count">—</strong></button></section>
+    <button type="button" id="clear-maintenance" class="button small" hidden data-i18n="web.clear"></button>
+    <div id="feedback" role="status" aria-live="polite"></div>
+    <section class="panel">
+      <div class="panel-heading"><div><h2 id="view-title"></h2><p id="result-count" class="muted" aria-live="polite"></p></div><div id="exports" class="export-actions" hidden><a id="export-computers" class="button" href="/api/software-computers.txt" data-i18n="web.exportComputers"></a><a id="export-versions" class="button" href="/api/software-computers.csv" data-i18n="web.exportVersions"></a><a id="export" class="button" href="/api/software.csv" data-i18n="web.exportFull"></a></div></div>
+      <div id="selection" class="selection" hidden><span id="selection-text"></span><button id="clear-selection" class="button small" data-i18n="web.clear"></button></div>
+      <form id="filters" class="filters">
+        <label id="computer-filter"><span data-i18n="web.computerSearch"></span><input id="computer-query" type="search" data-i18n-placeholder="web.computerHint"></label>
+        <label id="os-filter"><span data-i18n="web.os"></span><input id="os-query" type="search" data-i18n-placeholder="web.osHint"></label>
+        <label id="maintenance-filter" hidden><span data-i18n="web.review.filter"></span><select id="maintenance-kind"><option value="all" data-i18n="web.review.all"></option><option value="bios" data-i18n="web.review.kind.bios"></option><option value="gpu" data-i18n="web.review.kind.gpu"></option></select></label>
+        <label id="name-filter" hidden><span data-i18n="web.productName"></span><input id="name-query" type="search" data-i18n-placeholder="web.softwareHint"></label>
+        <label id="publisher-filter" hidden><span data-i18n="web.publisher"></span><input id="publisher-query" type="search"></label>
+        <label id="version-filter" hidden><span data-i18n="web.version"></span><input id="version-query" type="search"></label>
+        <button class="button primary" type="submit" data-i18n="common.search"></button>
+      </form>
+      <div class="table-wrap"><table><thead id="table-head"></thead><tbody id="table-body"></tbody></table></div>
+      <div id="empty" class="empty" hidden data-i18n="web.empty"></div>
+      <div id="paging" class="paging" hidden><button id="previous-page" class="button small" data-i18n="web.previous"></button><span id="page-count"></span><button id="next-page" class="button small" data-i18n="web.next"></button></div>
+    </section>
+    <section id="detail" class="panel detail" hidden><div class="panel-heading"><h2 id="detail-title"></h2><button id="close-detail" class="button small" data-i18n="web.close"></button></div><div id="detail-content"></div></section>
+    <footer data-i18n="web.footer"></footer>
+  </main>
+</body>
+</html>

@@ -907,7 +907,7 @@ Il nuovo parametro CLI deve essere:
 Esempio:
 
 ```text
-\\SERVER\DMT\ZENIT\SAN-CESARIO\incoming
+\\SERVER\DMT\TENANT-EXAMPLE\SITE-EXAMPLE\incoming
 ```
 
 La GPO potrà quindi scegliere una destinazione diversa per OU/sede.

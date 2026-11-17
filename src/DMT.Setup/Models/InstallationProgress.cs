@@ -2,6 +2,7 @@ namespace DMT.Setup.Models;
 
 public sealed class InstallationProgress
 {
+    public string? Detail { get; init; }
     public string StatusKey { get; init; } = string.Empty;
     public int Percent { get; init; }
     public bool IsCompleted { get; init; }

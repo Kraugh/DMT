@@ -1,0 +1,31 @@
+<Window x:Class="DMT.Setup.ManagementWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="{Binding [manage.title]}" Width="850" Height="690" MinWidth="740" MinHeight="620"
+ WindowStartupLocation="CenterScreen" Background="#FFF4EE">
+ <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="28">
+  <TextBlock Text="{Binding [manage.title]}" FontSize="28" FontWeight="Bold"/>
+  <TextBlock Text="{Binding [manage.local]}" Margin="0,8,0,18" TextWrapping="Wrap"/>
+  <Border Background="White" CornerRadius="12" Padding="18" Margin="0,0,0,16"><StackPanel>
+   <TextBlock x:Name="ServiceStatusText" FontSize="17" FontWeight="SemiBold"/>
+   <Button Content="{Binding [manage.dashboard]}" Click="Dashboard_Click" HorizontalAlignment="Left" Margin="0,8,0,0" Padding="12,6"/>
+   <Button Content="{Binding [manage.reset]}" Click="ResetAdmin_Click" HorizontalAlignment="Left" Margin="0,8,0,0" Padding="12,6"/>
+   <WrapPanel Margin="0,12,0,0">
+    <Button x:Name="StartServiceButton" Content="{Binding [manage.start]}" Click="Start_Click" Padding="14,8" Margin="0,0,8,0"/>
+    <Button x:Name="RestartServiceButton" Content="{Binding [manage.restart]}" Click="Restart_Click" Padding="14,8" Margin="0,0,8,0"/>
+    <Button x:Name="StopServiceButton" Content="{Binding [manage.stop]}" Click="Stop_Click" Padding="14,8" Margin="0,0,8,0"/>
+    <Button Content="{Binding [manage.refresh]}" Click="Refresh_Click" Padding="14,8"/>
+   </WrapPanel>
+  </StackPanel></Border>
+  <Border Background="White" CornerRadius="12" Padding="18"><StackPanel>
+   <TextBlock Text="{Binding [manage.source]}"/>
+   <TextBox x:Name="SourceBox" Margin="0,5,0,12" Padding="8"/>
+   <TextBlock Text="{Binding [manage.database]}"/>
+   <DockPanel Margin="0,5,0,12"><Button DockPanel.Dock="Right" Content="{Binding [manage.browse]}" Click="Browse_Click" Margin="8,0,0,0" Padding="12,6"/><TextBox x:Name="DatabaseBox" Padding="8"/></DockPanel>
+   <TextBlock Text="{Binding [manage.acquireHelp]}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+   <Button x:Name="AcquireButton" Content="{Binding [manage.acquire]}" Click="Acquire_Click" HorizontalAlignment="Left" Padding="18,10"/>
+  </StackPanel></Border>
+  <TextBlock x:Name="OperationText" TextWrapping="Wrap" Margin="0,16,0,0"/>
+  <TextBox x:Name="ResultBox" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MaxHeight="180" Margin="0,10,0,0" Padding="8"/>
+ </StackPanel></ScrollViewer>
+</Window>

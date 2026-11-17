@@ -1,0 +1,69 @@
+name: Verify and package Windows checkpoint
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build all projects
+        shell: pwsh
+        run: dotnet build DMT.sln -c Release --artifacts-path build/verification
+      - name: Inventory and archive tests
+        shell: pwsh
+        run: dotnet build/verification/bin/DMT.Inventory.Tests/release/DMT.Inventory.Tests.dll
+      - name: Language packs
+        run: python tests/validate-language-packs.py
+      - name: Report display tests
+        run: node tests/report-text.test.cjs
+      - name: Mocked PDF24 tests (no real installation)
+        shell: pwsh
+        run: ./tests/Test-Pdf24Cleanup.ps1
+      - name: Mocked Cisco tests (no remote execution)
+        shell: pwsh
+        run: ./tests/Test-CiscoVpnRemoval.ps1
+      - name: Publish self-contained diagnostic package
+        shell: pwsh
+        run: ./scripts/Build-LocalInstaller.ps1 -OutputDirectory ./build/package
+      - name: HTTPS authentication and process ownership
+        shell: pwsh
+        run: dotnet build/verification/bin/DMT.Setup.Tests/release/DMT.Setup.Tests.dll build/package/payload/service/DMT.Web.exe build/package/payload/service/caddy.exe
+      - name: Verify packaged hashes without installing
+        shell: pwsh
+        run: |
+          $report = Join-Path $env:RUNNER_TEMP 'DMT-package-verification.json'
+          $start = [Diagnostics.ProcessStartInfo]::new((Resolve-Path 'build/package/DMT-Setup.exe').Path)
+          $start.UseShellExecute = $false
+          $start.CreateNoWindow = $true
+          $start.ArgumentList.Add('--verify-package')
+          $start.ArgumentList.Add($report)
+          $process = [Diagnostics.Process]::Start($start)
+          if (-not $process.WaitForExit(120000)) { $process.Kill($true); throw 'Package check timed out' }
+          if ($process.ExitCode -ne 0) { throw 'Package check failed' }
+          Get-Content -LiteralPath $report
+          if (-not (Get-Content -LiteralPath $report -Raw | ConvertFrom-Json).Valid) { throw 'Invalid package' }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DMT-diagnostic-win-x64-${{ github.sha }}
+          path: build/package/
+          if-no-files-found: error
+          retention-days: 30

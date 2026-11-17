@@ -13,6 +13,12 @@ namespace DMT.Setup;
 
 public partial class MainWindow : Window
 {
+    private void Manage_Click(object sender, RoutedEventArgs e)
+    {
+        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!, "--manage")
+            { UseShellExecute = true, Verb = "runas", WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden }); }
+        catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223) { }
+    }
     private readonly LocalizationService _localization = new();
     private readonly PortInspectionService _portInspector = new();
     private readonly ListenerDetailService _listenerDetailService = new();
@@ -38,6 +44,22 @@ public partial class MainWindow : Window
         _localization.Initialize();
         _localization.PropertyChanged += Localization_PropertyChanged;
         DataContext = _localization;
+        AccessLocalRadio.IsChecked = true; AccessLanRadio.IsEnabled = AccessCustomRadio.IsEnabled = false;
+        HttpsInternalRadio.IsChecked = true; HttpsExistingRadio.IsEnabled = false;
+        foreach (var option in new[] { AccessLanRadio, AccessCustomRadio, HttpsExistingRadio })
+            option.SetBinding(ToolTipProperty, new System.Windows.Data.Binding("[setup.localPilot]"));
+        var migration = Path.Combine(AppContext.BaseDirectory, "DMT-data.sqlite");
+        if (File.Exists(migration)) MigrationDatabaseBox.Text = migration;
+        var migrationSettings = Path.Combine(AppContext.BaseDirectory, "DMT-migration.json");
+        if (File.Exists(migrationSettings))
+        {
+            try
+            {
+                using var settings = System.Text.Json.JsonDocument.Parse(File.ReadAllText(migrationSettings));
+                if (settings.RootElement.TryGetProperty("SourceDirectory", out var source)) SourceDirectoryBox.Text = source.GetString();
+            }
+            catch (System.Text.Json.JsonException) { }
+        }
         PortsGrid.ItemsSource = _visibleListeners;
         UpdateLocalizedNetworkUi();
         StateChanged += MainWindow_StateChanged;
@@ -335,6 +357,8 @@ public partial class MainWindow : Window
         if (!int.TryParse(SelectedPortBox.Text.Trim(), out var httpsPort) || !ValidateAdminSelection())
             return;
 
+        if (string.IsNullOrWhiteSpace(SourceDirectoryBox.Text) || !Path.IsPathFullyQualified(SourceDirectoryBox.Text.Trim()))
+        { MessageBox.Show(_localization["setup.install.dataRequired"]); return; }
         ShowInstallationPanel();
         _installationRunning = true;
         InstallProgressBar.Value = 5;
@@ -353,15 +377,19 @@ public partial class MainWindow : Window
             HttpsMode = HttpsInternalRadio.IsChecked == true ? "internal" : "existing",
             AdminUsername = AdminUsernameBox.Text.Trim(),
             AdminDisplayName = string.IsNullOrWhiteSpace(AdminDisplayNameBox.Text) ? null : AdminDisplayNameBox.Text.Trim(),
-            AdminPassword = AdminPasswordBox.Password
+            AdminPassword = AdminPasswordBox.Password,
+            SourceDirectory = SourceDirectoryBox.Text.Trim(),
+            MigrationDatabase = string.IsNullOrWhiteSpace(MigrationDatabaseBox.Text) ? null : MigrationDatabaseBox.Text.Trim()
         };
 
+        string? installationDetail = null;
         var result = await _elevatedInstallationService.RunAsync(plan, progress =>
         {
             Dispatcher.Invoke(() =>
             {
                 InstallProgressBar.Value = progress.Percent;
                 InstallStatusText.Text = _localization[progress.StatusKey];
+                if (progress.Detail != null) { installationDetail = progress.Detail; InstallStatusText.Text += Environment.NewLine + progress.Detail; }
             });
         });
 
@@ -369,6 +397,7 @@ public partial class MainWindow : Window
 
         if (result.Success)
         {
+            AdminPasswordBox.Clear(); AdminConfirmPasswordBox.Clear();
             InstallProgressBar.Value = 100;
             InstallStatusText.Text = _localization["setup.install.status.coreComplete"];
             ShowCompletePanel();
@@ -377,6 +406,7 @@ public partial class MainWindow : Window
 
         InstallProgressBar.Value = 0;
         InstallStatusText.Text = _localization[result.ErrorKey ?? "setup.install.error.communication"];
+        if (installationDetail != null) InstallStatusText.Text += Environment.NewLine + installationDetail;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.install.returnSummary]"));
         BeginButton.IsEnabled = true;
         BackButton.Visibility = Visibility.Collapsed;
@@ -418,7 +448,16 @@ public partial class MainWindow : Window
         BackButton.Visibility = Visibility.Collapsed;
         BeginButtonText.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("[setup.complete.close]"));
         BeginButton.IsEnabled = true;
+        InstalledEndpointText.Text = "https://localhost:" + SelectedPortBox.Text.Trim();
     }
+
+    private void MigrationBrowse_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog { Filter = "SQLite|*.sqlite;*.sqlite3;*.db", CheckFileExists = true };
+        if (dialog.ShowDialog(this) == true) MigrationDatabaseBox.Text = dialog.FileName;
+    }
+    private void OpenInstalled_Click(object sender, RoutedEventArgs e) => System.Diagnostics.Process.Start(
+        new System.Diagnostics.ProcessStartInfo(InstalledEndpointText.Text) { UseShellExecute = true });
 
     private void AdminField_Changed(object sender, RoutedEventArgs e)
     {

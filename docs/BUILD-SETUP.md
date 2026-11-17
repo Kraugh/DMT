@@ -1,42 +1,12 @@
 # Building DMT Setup
 
-The first executable slice is `src/DMT.Setup`, a WPF application targeting `net10.0-windows`.
-
-## Requirements
-
-- Windows 10/11
-- .NET 10 SDK
-
-## Development build
-
-From the repository root:
+Requires Windows x64, .NET 10 SDK and PowerShell 7. Python 3 and Node.js are development/test prerequisites only.
 
 ```powershell
 dotnet build .\DMT.sln
+pwsh -NoProfile -File .\scripts\Build-LocalInstaller.ps1
 ```
 
-Run directly:
+The script publishes the WPF manager and web host with runtimes, downloads official Caddy and verifies its checksum, then creates a per-file SHA-256 manifest. The final printed path is the complete package. A standalone WPF publish does not contain the service payload. Languages and branding remain external. No separate .NET installation is required by the published programs.
 
-```powershell
-dotnet run --project .\src\DMT.Setup\DMT.Setup.csproj
-```
-
-## Self-contained Windows publish
-
-```powershell
-dotnet publish .\src\DMT.Setup\DMT.Setup.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
-```
-
-The project copies `languages/*.json` and the branding assets beside the published executable. Language packs deliberately remain external so adding a normal language does not require recompiling the application.
-
-## Before a release
-
-Validate language-key parity:
-
-```powershell
-python .\tests\validate-language-packs.py
-```
-
-All shipped packs, including hidden `tlh.json`, must contain the complete `en-US` key set.
-
-The current Klingon translations are a development draft and require linguistic review before public distribution.
+See [recovery and all checks](RECOVERY.md). The physical-PC installer is blocked; [STATUS.md](STATUS.md) records the stall and acceptance still required. Checkpoint binaries are diagnostic previews, not a stable release.
