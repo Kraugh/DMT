@@ -2,6 +2,16 @@
 
 This document is a recovery handoff, not a production-readiness claim. The repository contains the implementation and synthetic verification; private inventories and machine configuration are excluded.
 
+## Retry candidate — 2026-11-26
+
+`0.2.0-local.2` removes the synchronous wait on asynchronous named-pipe progress in the WPF worker: deployment callbacks are awaited end-to-end, and the transport does not capture a dispatcher. A deterministic regression test uses a non-pumping STA context with delayed writes and checks completion, protocol fields and cancellation (21 setup/runtime assertions total). This confirms a code-level deadlock risk was removed; it does not establish that this was the only cause of the physical-PC stall.
+
+Logs now start before pipe connection under `%LOCALAPPDATA%\DMT\SetupLogs`, are flushed to disk at every phase and record directory/ACL and migration boundaries without serializing the installation plan or password. Progress writes are bounded to 30 seconds and `sc.exe` waits to 45 seconds; payload copying reports every 25 files. There is not yet a universal timeout/recovery mechanism for synchronous filesystem/SQLite calls. The footer uses the executable's actual informational version.
+
+Before retrying on a previously interrupted PC, run `Get-DmtInstallationDiagnostics.ps1` from the extracted package. It inspects service/process/directory state and candidate version/hash without reading database/configuration secrets, changing permissions, stopping services or deleting anything. Review partial state before choosing recovery; the candidate still refuses an existing installation. Do not remove the previous installation automatically.
+
+The software dashboard now distinguishes matching software-entry count from distinct asset count, across all result pages. A broad product search includes subcomponents and multiple reported versions; it is not an installed-computer count.
+
 ## Available implementation
 
 - .NET 10 WPF setup, existing branding/port inspection and external language packs, including the hidden Klingon pack.
@@ -48,4 +58,4 @@ The installer currently refuses an existing installation; there is no complete u
 
 Run the commands in [RECOVERY.md](RECOVERY.md) and [tests/README.md](../tests/README.md). The Windows workflow repeats build, inventory tests, language parity, report-text tests, mocked GPO tests, payload verification and synthetic HTTPS/authentication/process-ownership integration. It never registers a service, changes machine certificate trust, contacts company endpoints or imports company reports.
 
-The known local test counts are 133 inventory assertions, 18 setup/runtime assertions, 19 report-text assertions, 25 PDF24 assertions and 16 Cisco assertions, plus nine-pack language parity. Passing these checks does not close the installer incident above. Open work is also tracked in [ROADMAP.md](../ROADMAP.md), [ingestion issue #1](https://github.com/Kraugh/DMT/issues/1) and [installer blocker #2](https://github.com/Kraugh/DMT/issues/2).
+The known local test counts are 133 inventory assertions, 21 setup/runtime assertions, 19 report-text assertions, 25 PDF24 assertions and 16 Cisco assertions, plus nine-pack language parity. Passing these checks does not close the installer incident above. Open work is also tracked in [ROADMAP.md](../ROADMAP.md), [ingestion issue #1](https://github.com/Kraugh/DMT/issues/1) and [installer blocker #2](https://github.com/Kraugh/DMT/issues/2).

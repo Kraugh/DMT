@@ -101,7 +101,9 @@ function render() {
     body.append(row);
   }
   $('table-body').replaceChildren(body); $('empty').hidden = rows.length > 0;
-  $('result-count').textContent = `${t('web.results')}: ${format(rows.length)}`;
+  $('result-count').textContent = view === 'software'
+    ? `${t('web.softwareEntries')}: ${format(rows.length)} · ${t('web.matchingComputers')}: ${format(new Set(rows.map(row => row.asset_id)).size)}`
+    : `${t('web.results')}: ${format(rows.length)}`;
 }
 async function load() {
   const request = ++generation; feedback('web.loading');

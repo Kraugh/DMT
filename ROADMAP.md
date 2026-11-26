@@ -4,6 +4,8 @@ This roadmap records the current direction of **DMT — Dashboard Maintenance To
 
 ## Recovery checkpoint — 2026-11-17
 
+Update 2026-11-26: retry candidate `0.2.0-local.2` removes the synchronous WPF progress wait, adds durable phase logs and STA regression coverage, and corrects the software-entry/computer counter. Physical-PC diagnostics, interrupted-state recovery and successful installation acceptance remain open in issue #2; no successful retry is claimed.
+
 Tracking: [ingestion #1](https://github.com/Kraugh/DMT/issues/1), [blocked physical installer #2](https://github.com/Kraugh/DMT/issues/2).
 
 See [current implementation and handoff](docs/STATUS.md) and [clean-PC recovery](docs/RECOVERY.md). This section is the current operational status; older phase checklists below also include broader product requirements.

@@ -304,6 +304,9 @@
         "manage.resetBody": "Choose a new password of at least 12 characters. The DMT service will restart if it is running; existing sessions will be revoked.",
         "manage.save": "Save",
         "manage.passwordMismatch": "Passwords must match and contain at least 12 characters.",
-        "manage.passwordReset": "Password saved. Start DMT to use the new password."
+        "manage.passwordReset": "Password saved. Start DMT to use the new password.",
+        "web.softwareEntries": "Software entries",
+        "web.matchingComputers": "Distinct computers",
+        "setup.install.progress.database": "Preparing and verifying the database..."
     }
 }

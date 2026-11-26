@@ -37,7 +37,8 @@ public static class LocalServiceDeployment
         return entries.Length;
     }
 
-    public static async Task InstallAsync(InstallationPlan plan, Action<string, int> progress, CancellationToken cancellationToken)
+    public static async Task InstallAsync(InstallationPlan plan, Func<string, int, Task> progress, CancellationToken cancellationToken,
+        Action<string>? diagnostic = null)
     {
         if (plan.AccessMode != "local" || plan.HttpsMode != "internal") throw new InvalidDataException("local_internal_https_only");
         if (plan.HttpsPort is < 1 or > 65535 || string.IsNullOrWhiteSpace(plan.SourceDirectory) || !Path.IsPathFullyQualified(plan.SourceDirectory)) throw new InvalidDataException("invalid_installation_plan");
@@ -51,8 +52,10 @@ public static class LocalServiceDeployment
         var serviceCreated = false; string? trustedThumbprint = null;
         void DirectoryNew(string path)
         {
+            diagnostic?.Invoke("directory_check " + path);
             if (Directory.Exists(path)) { if (File.GetAttributes(path).HasFlag(FileAttributes.ReparsePoint)) throw new IOException("reparse_directory"); return; }
             Directory.CreateDirectory(path); createdDirectories.Add(path);
+            diagnostic?.Invoke("directory_created " + path);
         }
         void WriteNew<T>(string path, T value)
         {
@@ -61,12 +64,16 @@ public static class LocalServiceDeployment
         }
         try
         {
-            progress("setup.install.progress.directories", 35);
+            await progress("setup.install.progress.directories", 35);
             DirectoryNew(ProgramDirectory); DirectoryNew(DataDirectory);
-            Protect(ProgramDirectory, usersRead: true); Protect(DataDirectory);
+            diagnostic?.Invoke("program_acl_begin"); Protect(ProgramDirectory, usersRead: true);
+            diagnostic?.Invoke("data_acl_begin"); Protect(DataDirectory);
+            diagnostic?.Invoke("root_acls_complete");
             foreach (var name in new[] { "config", "data", "logs", "caddy" }) DirectoryNew(Path.Combine(DataDirectory, name));
-            foreach (var name in new[] { "data", "logs", "caddy" }) Protect(Path.Combine(DataDirectory, name), serviceWrite: true);
-            progress("setup.install.progress.deploying", 45);
+            foreach (var name in new[] { "data", "logs", "caddy" })
+            { diagnostic?.Invoke("service_acl " + name); Protect(Path.Combine(DataDirectory, name), serviceWrite: true); }
+            await progress("setup.install.progress.deploying", 45);
+            var copiedCount = 0;
             foreach (var item in payload)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -74,21 +81,24 @@ public static class LocalServiceDeployment
                 File.Copy(Contained(AppContext.BaseDirectory, item.Source), destination, false); createdFiles.Add(destination);
                 using var copied = File.OpenRead(destination);
                 if (Convert.ToHexString(SHA256.HashData(copied)) != item.Sha256) throw new InvalidDataException("copied_payload_hash_mismatch");
+                if (++copiedCount % 25 == 0) await progress("setup.install.progress.deploying", 45);
             }
+            await progress("setup.install.progress.database", 60);
             var database = Path.Combine(DataDirectory, "data", "dmt.sqlite");
             using (new FileStream(database, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { createdFiles.Add(database); }
             if (!string.IsNullOrWhiteSpace(plan.MigrationDatabase))
             {
                 using var input = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = Path.GetFullPath(plan.MigrationDatabase), Mode = SqliteOpenMode.ReadOnly, Pooling = false }.ToString());
                 using var output = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = database, Mode = SqliteOpenMode.ReadWrite, Pooling = false }.ToString());
-                input.Open(); output.Open();
+                diagnostic?.Invoke("migration_open"); input.Open(); output.Open();
                 using var check = input.CreateCommand(); check.CommandText = "PRAGMA integrity_check";
                 if ((string?)check.ExecuteScalar() != "ok") throw new InvalidDataException("migration_database_corrupt");
                 check.CommandText = "PRAGMA user_version";
                 if (Convert.ToInt32(check.ExecuteScalar()) != 1) throw new InvalidDataException("migration_schema_not_supported");
                 check.CommandText = "PRAGMA foreign_key_check";
                 using (var rows = check.ExecuteReader()) if (rows.Read()) throw new InvalidDataException("migration_foreign_key_error");
-                input.BackupDatabase(output);
+                diagnostic?.Invoke("migration_backup_begin"); input.BackupDatabase(output);
+                diagnostic?.Invoke("migration_backup_complete");
             }
             var verifiedStore = new InventoryStore(database); _ = verifiedStore.Systems("local"); _ = verifiedStore.Products("local"); SqliteConnection.ClearAllPools();
             var backendPort = Enumerable.Range(50080, 200).First(port => port != plan.HttpsPort && Free(port));
@@ -113,14 +123,14 @@ public static class LocalServiceDeployment
                 ["Dmt:CaddyConfig"] = caddyPath, ["Dmt:CaddyStorage"] = Path.Combine(DataDirectory, "caddy"),
                 ["Dmt:ArchiveCatchUp"] = "false", ["urls"] = $"http://127.0.0.1:{backendPort}"
             });
-            progress("setup.install.progress.service", 70);
+            await progress("setup.install.progress.service", 70);
             var serviceExecutable = Path.Combine(ProgramDirectory, "Service", "DMT.Web.exe");
             await ScAsync(["create", "DMT", "binPath=", $"\"{serviceExecutable}\" --Dmt:RuntimeConfig=\"{runtimePath}\"", "start=", "auto", "obj=", @"NT AUTHORITY\LocalService", "DisplayName=", "Dashboard Maintenance Toolkit"], cancellationToken);
             serviceCreated = true;
             await ScAsync(["failure", "DMT", "reset=", "86400", "actions=", "restart/10000/restart/30000/restart/60000"], cancellationToken);
             using (var service = new ServiceController("DMT"))
             { service.Start(); await Task.Run(() => service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60)), cancellationToken); }
-            progress("setup.install.progress.certificate", 80);
+            await progress("setup.install.progress.certificate", 80);
             var rootPath = Path.Combine(DataDirectory, "caddy", "caddy", "pki", "authorities", "local", "root.crt");
             var deadline = DateTime.UtcNow.AddSeconds(60);
             while (!File.Exists(rootPath) && DateTime.UtcNow < deadline) await Task.Delay(500, cancellationToken);
@@ -131,7 +141,7 @@ public static class LocalServiceDeployment
                 if (roots.Certificates.Find(X509FindType.FindByThumbprint, certificate.Thumbprint, false).Count == 0)
                 { roots.Add(certificate); trustedThumbprint = certificate.Thumbprint; }
             }
-            progress("setup.install.progress.health", 90);
+            await progress("setup.install.progress.health", 90);
             using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
             using var response = await client.GetAsync($"https://localhost:{plan.HttpsPort}/login", cancellationToken);
             if (!response.IsSuccessStatusCode || !response.Headers.TryGetValues("X-DMT-Instance", out var values) || !values.Contains(instance)) throw new IOException("installed_https_health_check_failed");
@@ -150,6 +160,7 @@ public static class LocalServiceDeployment
         }
         catch
         {
+            diagnostic?.Invoke("rollback_begin");
             if (serviceCreated)
             {
                 try { using var service = new ServiceController("DMT"); if (service.Status != ServiceControllerStatus.Stopped) { service.Stop(); service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30)); } } catch { }
@@ -193,9 +204,13 @@ public static class LocalServiceDeployment
     {
         var start = new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "sc.exe")) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
         foreach (var argument in arguments) start.ArgumentList.Add(argument);
+        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(token);
+        deadline.CancelAfter(TimeSpan.FromSeconds(45));
+        token = deadline.Token;
         using var process = Process.Start(start) ?? throw new IOException("service_command_launch_failed");
         var output = process.StandardOutput.ReadToEndAsync(token); var errors = process.StandardError.ReadToEndAsync(token);
-        await process.WaitForExitAsync(token);
+        try { await process.WaitForExitAsync(token); }
+        catch (OperationCanceledException) { try { if (!process.HasExited) process.Kill(); } catch { } throw; }
         if (process.ExitCode != 0) throw new IOException("service_command_failed: " + await output + await errors);
     }
 }

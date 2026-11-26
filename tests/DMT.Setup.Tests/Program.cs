@@ -11,6 +11,7 @@ using DMT.Inventory;
 using DMT.Setup.Services;
 
 var assertions = 0;
+assertions += InstallationProgressTests.Run();
 void Check(bool value, string name) { if (!value) throw new Exception(name); assertions++; }
 var credential = LocalAdminCredential.Create("test-admin", "Synthetic-password-123!");
 Check(credential.Verify("TEST-ADMIN", "Synthetic-password-123!"), "password_case_insensitive_username");

@@ -15,6 +15,15 @@ Copiare entrambi gli ZIP sul PC fisico ed estrarli **nella stessa cartella local
 
 ## Procedura
 
+Per il candidato `0.2.0-local.2`, prima di riprovare sul PC dove il vecchio installer si era bloccato, eseguire nella cartella estratta:
+
+```powershell
+.\Get-DmtInstallationDiagnostics.ps1 | Set-Clipboard
+Get-Clipboard
+```
+
+Il comando e' in sola lettura. Condividere il riepilogo privatamente, non in issue pubbliche. Non cancellare cartelle o servizi per aggirare il controllo di installazione esistente. I nuovi log continui si trovano in `%LOCALAPPDATA%\DMT\SetupLogs`; il percorso viene mostrato durante l'installazione. La causa del vecchio blocco richiede ancora conferma sul fisico.
+
 - Conserva il percorso HTTPS locale e scegli una porta libera nel passaggio Rete (proposta iniziale 8443).
 - Crea un amministratore **DMT** con password di almeno 12 caratteri. E' distinto dall'account Windows/di dominio.
 - Nel riepilogo controlla la cartella dei report: usare un percorso UNC raggiungibile dal PC fisico, non la lettera di un disco mappato nella VM.
@@ -51,7 +60,7 @@ L'installer non aggiunge regole firewall, non apre l'accesso LAN e non modifica 
 
 ## Diagnostica e limiti del pilota
 
-In caso di errore, il programma mostra il motivo e il file `%TEMP%\DMT-Setup-<identificativo>.log`. La pulizia tenta di arrestare/eliminare solo il servizio appena creato, rimuovere solo il certificato appena aggiunto e annullare i file appena copiati. Eventuali dati runtime generati rimangono conservati; non viene promesso un rollback transazionale di Windows. Non forzare la reinstallazione sopra una configurazione esistente: questa versione la rifiuta per non sovrascrivere inventario o risorse.
+In caso di errore, il programma mostra il motivo e il file continuo `%LOCALAPPDATA%\DMT\SetupLogs\DMT-Setup-<identificativo>.log`. La pulizia tenta di arrestare/eliminare solo il servizio appena creato, rimuovere solo il certificato appena aggiunto e annullare i file appena copiati. Eventuali dati runtime generati rimangono conservati; non viene promesso un rollback transazionale di Windows. Non forzare la reinstallazione sopra una configurazione esistente: questa versione la rifiuta per non sovrascrivere inventario o risorse.
 
 Non sono ancora inclusi accesso LAN, certificati aziendali esistenti, aggiornamento in-place e disinstallatore completo. I programmi di questo pilota non sono firmati. Le lingue restano esterne; le nuove stringhe operative sono complete in italiano/inglese, con bozze inglesi negli altri pacchetti, incluso Klingon.
 

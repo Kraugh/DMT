@@ -29,6 +29,7 @@ Copy-Item -LiteralPath (Join-Path $service 'caddy-release\caddy.exe') -Destinati
 Copy-Item -LiteralPath (Join-Path $repo 'LICENSE') -Destination (Join-Path $OutputDirectory 'LICENSE-DMT.txt')
 Copy-Item -LiteralPath (Join-Path $repo 'docs\INSTALL-LOCAL.it.md') -Destination (Join-Path $OutputDirectory 'LEGGIMI.md')
 Copy-Item -LiteralPath (Join-Path $repo 'docs\STATUS.md') -Destination (Join-Path $OutputDirectory 'STATUS.md')
+Copy-Item -LiteralPath (Join-Path $repo 'scripts\Get-DmtInstallationDiagnostics.ps1') -Destination (Join-Path $OutputDirectory 'Get-DmtInstallationDiagnostics.ps1')
 $entries=foreach($file in Get-ChildItem -LiteralPath $OutputDirectory -File -Recurse){
  if($file.Extension -in '.sqlite','.sqlite3','.db'){throw 'Database must not be packaged with public binaries'}
  $relative=[IO.Path]::GetRelativePath($OutputDirectory,$file.FullName)

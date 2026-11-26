@@ -41,6 +41,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        SetupVersionText.Text = "DMT Setup " + (typeof(MainWindow).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).OfType<System.Reflection.AssemblyInformationalVersionAttribute>().FirstOrDefault()?.InformationalVersion.Split('+')[0] ?? typeof(MainWindow).Assembly.GetName().Version?.ToString());
         _localization.Initialize();
         _localization.PropertyChanged += Localization_PropertyChanged;
         DataContext = _localization;
