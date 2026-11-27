@@ -134,7 +134,7 @@
         "setup.admin.password": "Password",
         "setup.admin.confirmPassword": "Conferma password",
         "setup.admin.validation.username": "Inserisci un nome utente amministratore.",
-        "setup.admin.validation.length": "Usa almeno 12 caratteri.",
+        "setup.admin.validation.length": "Usa almeno 8 caratteri.",
         "setup.admin.validation.match": "Le due password non coincidono.",
         "setup.admin.validation.ok": "Password confermata.",
         "setup.admin.recovery.title": "Recupero di emergenza",
@@ -287,7 +287,7 @@
         "manage.status.Paused": "In pausa",
         "manage.phase.conflicts": "Gestione conflitti",
         "setup.localPilot": "Pilota locale: HTTPS solo su localhost. L’installer rende attendibile una CA locale Caddy dedicata su questo PC. Accesso LAN e certificati esistenti non sono disponibili in questa versione.",
-        "setup.migration": "Database inventario esistente (facoltativo)",
+        "setup.migration": "Database da importare (copia sorgente, facoltativo)",
         "setup.install.dataRequired": "Inserisci il percorso assoluto della cartella sorgente, preferibilmente un percorso di rete UNC.",
         "setup.install.progress.deploying": "Copia e verifica dei programmi...",
         "setup.install.progress.service": "Registrazione e avvio del servizio Windows...",
@@ -301,12 +301,14 @@
         "auth.rateLimit": "Troppi tentativi. Attendi un minuto e riprova.",
         "auth.logout": "Esci",
         "manage.reset": "Ripristina password amministratore DMT",
-        "manage.resetBody": "Scegli una nuova password di almeno 12 caratteri. Il servizio DMT verrà riavviato se attivo; le sessioni esistenti saranno invalidate.",
+        "manage.resetBody": "Scegli una nuova password di almeno 8 caratteri. Il servizio DMT verrà riavviato se attivo; le sessioni esistenti saranno invalidate.",
         "manage.save": "Salva",
-        "manage.passwordMismatch": "Le password devono coincidere e contenere almeno 12 caratteri.",
+        "manage.passwordMismatch": "Le password devono coincidere e contenere almeno 8 caratteri.",
         "manage.passwordReset": "Password salvata. Avvia DMT per usare la nuova password.",
         "web.softwareEntries": "Voci software",
         "web.matchingComputers": "Computer distinti",
-        "setup.install.progress.database": "Preparazione e verifica del database..."
+        "setup.install.progress.database": "Preparazione e verifica del database...",
+        "setup.migrationHint": "Questo file viene copiato nella destinazione definitiva durante l’installazione. Non è il database usato dal servizio; la copia sorgente resta invariata.",
+        "setup.databaseDestination": "Database definitivo del servizio"
     }
 }

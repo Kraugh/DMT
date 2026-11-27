@@ -41,6 +41,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        DatabaseDestinationBox.Text = LocalServiceDeployment.DatabasePath;
         SetupVersionText.Text = "DMT Setup " + (typeof(MainWindow).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).OfType<System.Reflection.AssemblyInformationalVersionAttribute>().FirstOrDefault()?.InformationalVersion.Split('+')[0] ?? typeof(MainWindow).Assembly.GetName().Version?.ToString());
         _localization.Initialize();
         _localization.PropertyChanged += Localization_PropertyChanged;
@@ -473,7 +474,7 @@ public partial class MainWindow : Window
         string key;
         bool valid;
         if (string.IsNullOrWhiteSpace(username)) { key = "setup.admin.validation.username"; valid = false; }
-        else if (password.Length < 12) { key = "setup.admin.validation.length"; valid = false; }
+        else if (password.Length < DMT.Inventory.LocalAdminCredential.MinimumPasswordLength) { key = "setup.admin.validation.length"; valid = false; }
         else if (!string.Equals(password, AdminConfirmPasswordBox.Password, StringComparison.Ordinal)) { key = "setup.admin.validation.match"; valid = false; }
         else { key = "setup.admin.validation.ok"; valid = true; }
         AdminValidationText.Text = _localization[key];

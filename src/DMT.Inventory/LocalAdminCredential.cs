@@ -4,9 +4,10 @@ namespace DMT.Inventory;
 
 public sealed record LocalAdminCredential(string Username, string Salt, string Hash, int Iterations = 210_000)
 {
+    public const int MinimumPasswordLength = 8;
     public static LocalAdminCredential Create(string username, string password)
     {
-        if (string.IsNullOrWhiteSpace(username) || password.Length is < 12 or > 1024) throw new ArgumentException("invalid_admin_credentials");
+        if (string.IsNullOrWhiteSpace(username) || password.Length < MinimumPasswordLength || password.Length > 1024) throw new ArgumentException("invalid_admin_credentials");
         var salt = RandomNumberGenerator.GetBytes(16);
         var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 210_000, HashAlgorithmName.SHA256, 32);
         return new(username.Trim(), Convert.ToBase64String(salt), Convert.ToBase64String(hash));

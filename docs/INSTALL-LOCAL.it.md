@@ -13,6 +13,10 @@ Sono separati due pacchetti:
 
 Copiare entrambi gli ZIP sul PC fisico ed estrarli **nella stessa cartella locale**. Non avviare i programmi direttamente dall'anteprima dello ZIP. Avviare `DMT-Setup.exe` con il proprio account Windows amministratore: la fase di scrittura richiede UAC. Per questo pilota l'elevazione deve usare lo stesso account dell'interfaccia, come avviene con il consenso UAC di un amministratore; l'elevazione con un diverso account non e' supportata dal canale privato dell'installer.
 
+## Aggiornamento 0.2.0-local.3 — 2026-11-27
+
+Il profilo solo locale richiede almeno 8 caratteri. Il riepilogo distingue il database sorgente da importare dalla copia definitiva in `%ProgramData%\DMT\DB\DMT-data.sqlite`. Il percorso in temp e' solo la sorgente: non va spostato manualmente nella destinazione finale prima dell'installazione. Dopo installazione riuscita e verifica dei dati, l'utente puo' rimuovere la cartella temporanea di estrazione; non e' una dipendenza del servizio. Conservare il backup privato separatamente. Le installazioni precedenti non vengono spostate automaticamente.
+
 ## Procedura
 
 Per il candidato `0.2.0-local.2`, prima di riprovare sul PC dove il vecchio installer si era bloccato, eseguire nella cartella estratta:
@@ -25,7 +29,7 @@ Get-Clipboard
 Il comando e' in sola lettura. Condividere il riepilogo privatamente, non in issue pubbliche. Non cancellare cartelle o servizi per aggirare il controllo di installazione esistente. I nuovi log continui si trovano in `%LOCALAPPDATA%\DMT\SetupLogs`; il percorso viene mostrato durante l'installazione. La causa del vecchio blocco richiede ancora conferma sul fisico.
 
 - Conserva il percorso HTTPS locale e scegli una porta libera nel passaggio Rete (proposta iniziale 8443).
-- Crea un amministratore **DMT** con password di almeno 12 caratteri. E' distinto dall'account Windows/di dominio.
+- Crea un amministratore **DMT** con password di almeno 8 caratteri. E' distinto dall'account Windows/di dominio.
 - Nel riepilogo controlla la cartella dei report: usare un percorso UNC raggiungibile dal PC fisico, non la lettera di un disco mappato nella VM.
 - Se il pacchetto di migrazione e' stato estratto nella stessa cartella, il database `DMT-data.sqlite` viene proposto automaticamente. In alternativa seleziona il file tramite Sfoglia. Lasciandolo vuoto, viene creato un inventario nuovo.
 - Controlla il riepilogo e premi il pulsante di installazione. L'installer verifica i programmi, copia il database con SQLite Backup, registra e avvia il servizio, prepara HTTPS, aggiunge al computer la CA locale dedicata e verifica la risposta autenticata dell'installazione tramite il suo identificativo.
@@ -50,7 +54,7 @@ Il servizio locale non accede automaticamente alla share con l'identita' LocalSe
 
 - `%ProgramFiles%\DMT\Manager`: pannello WPF e runtime.
 - `%ProgramFiles%\DMT\Service`: servizio web, Caddy e runtime.
-- `%ProgramData%\DMT\data\dmt.sqlite`: database locale.
+- `%ProgramData%\DMT\DB\DMT-data.sqlite`: database locale.
 - `%ProgramData%\DMT\config`: configurazione e credenziale amministratore DMT derivata con PBKDF2; nessuna password in chiaro.
 - `%ProgramData%\DMT\caddy`: CA locale, chiavi e certificati Caddy, con permessi limitati.
 - `%ProgramData%\DMT\installation-manifest.json`: risorse gestite, servizio e impronta del certificato.

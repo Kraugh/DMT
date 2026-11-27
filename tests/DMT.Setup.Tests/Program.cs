@@ -19,6 +19,10 @@ Check(!credential.Verify("test-admin", "wrong"), "wrong_password");
 Check(!credential.Verify("other", "Synthetic-password-123!"), "wrong_username");
 Check(LocalAdminCredential.Create("test-admin", "Synthetic-password-123!").Salt != credential.Salt, "random_password_salt");
 Check(!(credential with { Hash = "invalid" }).Verify("test-admin", "Synthetic-password-123!"), "invalid_hash_rejected");
+Check(LocalAdminCredential.Create("test-admin", "Eight123").Verify("test-admin", "Eight123"), "eight_character_local_password");
+var shortPasswordRejected = false;
+try { LocalAdminCredential.Create("test-admin", "Seven12"); } catch (ArgumentException) { shortPasswordRejected = true; }
+Check(shortPasswordRejected, "seven_character_password_rejected");
 var folder = Path.Combine(Path.GetTempPath(), "DMT-setup-tests-" + Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(folder); Console.WriteLine("temporary_directory=" + folder);
 Process? backend = null;

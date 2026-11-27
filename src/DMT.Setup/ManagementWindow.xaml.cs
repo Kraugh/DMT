@@ -21,7 +21,9 @@ public partial class ManagementWindow : Window
     public ManagementWindow()
     {
         InitializeComponent(); _strings.Initialize(); DataContext = _strings;
-        var installedDb = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "DMT", "data", "dmt.sqlite");
+        var installedDb = LocalServiceDeployment.DatabasePath;
+        var legacyDb = Path.Combine(LocalServiceDeployment.DataDirectory, "data", "dmt.sqlite");
+        if (!File.Exists(installedDb) && File.Exists(legacyDb)) installedDb = legacyDb;
         DatabaseBox.Text = File.Exists(installedDb) ? installedDb : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DMT", "Development", "dmt.sqlite");
         var configurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "DMT", "config", "installation.json");
         try
@@ -31,6 +33,7 @@ public partial class ManagementWindow : Window
                 using var configuration = JsonDocument.Parse(File.ReadAllText(configurationPath));
                 if (configuration.RootElement.TryGetProperty("SourceDirectory", out var source)) SourceBox.Text = source.GetString();
                 if (configuration.RootElement.TryGetProperty("HttpsPort", out var port)) _httpsPort = port.GetInt32();
+                if (configuration.RootElement.TryGetProperty("Database", out var configuredDatabase)) DatabaseBox.Text = configuredDatabase.GetString();
             }
             if (File.Exists(_preferences))
             {
@@ -132,7 +135,7 @@ public partial class ManagementWindow : Window
             var dialog = new Window { Owner = this, Title = _strings["manage.reset"], Content = panel, Width = 460, SizeToContent = SizeToContent.Height, WindowStartupLocation = WindowStartupLocation.CenterOwner };
             save.Click += (_, _) =>
             {
-                if (password.Password.Length < 12 || password.Password != confirm.Password) { error.Text = _strings["manage.passwordMismatch"]; return; }
+                if (password.Password.Length < LocalAdminCredential.MinimumPasswordLength || password.Password != confirm.Password) { error.Text = _strings["manage.passwordMismatch"]; return; }
                 try
                 {
                     var updated = LocalAdminCredential.Create(current.Username, password.Password);

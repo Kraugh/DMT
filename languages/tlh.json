@@ -287,7 +287,7 @@
         "manage.status.Paused": "Paused",
         "manage.phase.conflicts": "Reconciling conflicts",
         "setup.localPilot": "Local pilot: HTTPS on localhost only. The installer trusts a dedicated Caddy local CA on this PC. LAN access and existing certificates are not available in this build.",
-        "setup.migration": "Existing inventory database (optional)",
+        "setup.migration": "Database to import (source copy, optional)",
         "setup.install.dataRequired": "Enter an absolute source folder path, preferably a UNC network path.",
         "setup.install.progress.deploying": "Copying and verifying application files...",
         "setup.install.progress.service": "Registering and starting the Windows service...",
@@ -301,12 +301,14 @@
         "auth.rateLimit": "Too many attempts. Wait one minute and try again.",
         "auth.logout": "Sign out",
         "manage.reset": "Reset DMT administrator password",
-        "manage.resetBody": "Choose a new password of at least 12 characters. The DMT service will restart if it is running; existing sessions will be revoked.",
+        "manage.resetBody": "Choose a new password of at least 8 characters. The DMT service will restart if it is running; existing sessions will be revoked.",
         "manage.save": "Save",
-        "manage.passwordMismatch": "Passwords must match and contain at least 12 characters.",
+        "manage.passwordMismatch": "Passwords must match and contain at least 8 characters.",
         "manage.passwordReset": "Password saved. Start DMT to use the new password.",
         "web.softwareEntries": "Software entries",
         "web.matchingComputers": "Distinct computers",
-        "setup.install.progress.database": "Preparing and verifying the database..."
+        "setup.install.progress.database": "Preparing and verifying the database...",
+        "setup.migrationHint": "Setup copies this file to the final destination. The service uses the installed copy; the source file is preserved.",
+        "setup.databaseDestination": "Final service database"
     }
 }

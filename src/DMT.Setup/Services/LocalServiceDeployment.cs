@@ -20,6 +20,7 @@ public static class LocalServiceDeployment
 {
     public static readonly string ProgramDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "DMT");
     public static readonly string DataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "DMT");
+    public static readonly string DatabasePath = Path.Combine(DataDirectory, "DB", "DMT-data.sqlite");
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
     private sealed record PayloadEntry(string Source, string Destination, string Sha256);
     public static int VerifyPayload(string root)
@@ -69,8 +70,8 @@ public static class LocalServiceDeployment
             diagnostic?.Invoke("program_acl_begin"); Protect(ProgramDirectory, usersRead: true);
             diagnostic?.Invoke("data_acl_begin"); Protect(DataDirectory);
             diagnostic?.Invoke("root_acls_complete");
-            foreach (var name in new[] { "config", "data", "logs", "caddy" }) DirectoryNew(Path.Combine(DataDirectory, name));
-            foreach (var name in new[] { "data", "logs", "caddy" })
+            foreach (var name in new[] { "config", "DB", "logs", "caddy" }) DirectoryNew(Path.Combine(DataDirectory, name));
+            foreach (var name in new[] { "DB", "logs", "caddy" })
             { diagnostic?.Invoke("service_acl " + name); Protect(Path.Combine(DataDirectory, name), serviceWrite: true); }
             await progress("setup.install.progress.deploying", 45);
             var copiedCount = 0;
@@ -84,7 +85,7 @@ public static class LocalServiceDeployment
                 if (++copiedCount % 25 == 0) await progress("setup.install.progress.deploying", 45);
             }
             await progress("setup.install.progress.database", 60);
-            var database = Path.Combine(DataDirectory, "data", "dmt.sqlite");
+            var database = DatabasePath;
             using (new FileStream(database, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { createdFiles.Add(database); }
             if (!string.IsNullOrWhiteSpace(plan.MigrationDatabase))
             {
@@ -105,7 +106,7 @@ public static class LocalServiceDeployment
             var adminPath = Path.Combine(DataDirectory, "config", "admin.json");
             WriteNew(adminPath, LocalAdminCredential.Create(plan.AdminUsername, plan.AdminPassword));
             WriteNew(Path.Combine(DataDirectory, "config", "installation.json"), new
-            { plan.HttpsPort, BackendPort = backendPort, plan.AccessMode, plan.HttpsMode, plan.AdminUsername, plan.AdminDisplayName, plan.SourceDirectory });
+            { plan.HttpsPort, BackendPort = backendPort, plan.AccessMode, plan.HttpsMode, plan.AdminUsername, plan.AdminDisplayName, plan.SourceDirectory, Database = database });
             var caddyPath = Path.Combine(DataDirectory, "config", "Caddyfile");
             using (var file = new FileStream(caddyPath, FileMode.CreateNew, FileAccess.Write, FileShare.Read))
             using (var writer = new StreamWriter(file))

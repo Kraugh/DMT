@@ -2,6 +2,10 @@
 
 This document is a recovery handoff, not a production-readiness claim. The repository contains the implementation and synthetic verification; private inventories and machine configuration are excluded.
 
+## Local installer preferences — 2026-11-27
+
+Candidate `0.2.0-local.3` uses an 8-character minimum for the currently local-only administrator, consistently in setup, password reset and shared credential creation. Hashing, authentication and rate limiting are retained. New installations store their operational database at `%ProgramData%\DMT\DB\DMT-data.sqlite`; the migration picker is explicitly a source, not an operational location. The final path is shown read-only and recorded in installation/runtime configuration. The manager preserves compatibility with the previous `data/dmt.sqlite` location; existing installations are not moved. Two additional password-boundary tests bring the setup/runtime harness to 23 assertions. Physical installation acceptance remains pending.
+
 ## Retry candidate — 2026-11-26
 
 `0.2.0-local.2` removes the synchronous wait on asynchronous named-pipe progress in the WPF worker: deployment callbacks are awaited end-to-end, and the transport does not capture a dispatcher. A deterministic regression test uses a non-pumping STA context with delayed writes and checks completion, protocol fields and cancellation (21 setup/runtime assertions total). This confirms a code-level deadlock risk was removed; it does not establish that this was the only cause of the physical-PC stall.
